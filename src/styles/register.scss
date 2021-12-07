@@ -1,0 +1,131 @@
+.form-register {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0px 4px 26px -11px rgba(0, 0, 0, 0.25);
+  > p {
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+    color: #282828;
+    margin-top: 10px;
+  }
+  .header-register {
+    display: flex;
+    align-items: center;
+    .img-profile-register {
+      width: 162px;
+      div {
+        width: 100%;
+        height: 160px;
+        background-color: #979393;
+        border-radius: 2px;
+        overflow: hidden;
+        img {
+          width: 100%;
+        }
+      }
+      > button {
+        width: 100%;
+        height: 22px;
+        background-color: #c4c4c4;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 16px;
+        color: #ffffff;
+        margin-top: 6px;
+        cursor: pointer;
+      }
+    }
+    .basic-profile {
+      width: calc(100% - 178px);
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: 14px;
+      div {
+        margin: 0 14px 16px 0;
+        display: flex;
+        flex-wrap: wrap;
+        label {
+          width: 100%;
+          font-weight: 400;
+          font-size: 16px;
+          color: #313131;
+        }
+        input {
+          width: 100%;
+          height: 28px;
+          background: #f3f3f3;
+          border-radius: 3px;
+          border: none;
+          outline: none;
+          &:focus {
+            border-bottom: 2px solid rgba(33, 179, 81, 0.548);
+          }
+        }
+      }
+      .name {
+        width: 424px;
+      }
+      .birthday {
+        width: 170px;
+      }
+      .height {
+        width: 75px;
+      }
+      .nationality {
+        width: 120px;
+      }
+      .country_birth {
+        width: 167px;
+      }
+      .place_birth {
+        width: 166px;
+      }
+      .gender {
+        width: 120px;
+      }
+      .tattoos {
+        width: 70px;
+      }
+      .date_arrest {
+        width: 160px;
+      }
+      .reason_arrest {
+        width: 526px;
+      }
+    }
+  }
+  .description-register {
+    margin-top: 14px;
+    margin-bottom: 20px;
+    label {
+      color: #313131;
+    }
+    textarea {
+      width: 100%;
+      max-width: 874px;
+      height: 288px;
+      background-color: #ebebeb;
+      border: none;
+      border-radius: 3px;
+    }
+  }
+}
+.btns-register {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  > button {
+    width: 230px;
+    height: 38px;
+    background: #c4c4c4;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
+    border: none;
+    margin-bottom: 14px;
+  }
+}

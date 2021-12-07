@@ -1,0 +1,118 @@
+@import './mixin';
+
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.658);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  position: relative;
+  background-color: #fcfcfc;
+  width: 80%;
+  max-width: 860px;
+  height: 85%;
+  max-height: 600px;
+  border-radius: 3px;
+  padding: 12px 0;
+  > i {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    font-size: 24px;
+    color: #5e5e5e;
+    cursor: pointer;
+  }
+  > h3 {
+    font-weight: 600;
+    font-size: 20px;
+    color: #5a5a5a;
+    text-align: center;
+  }
+  .modal-view {
+    margin: 20px auto;
+    width: 90%;
+    height: inherit;
+  }
+  .btn-modal {
+    position: absolute;
+    bottom: 10px;
+    right: 5%;
+    button {
+      padding: 0 12px;
+      height: 38px;
+      background: #c4c4c4;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #ffffff;
+      border: none;
+    }
+  }
+}
+
+.modal-images {
+  overflow-y: auto;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+  > div {
+    height: 160px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  @include scrollbar;
+}
+
+.modal-files {
+  height: inherit;
+  .titles-file {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 26px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #1b1b1b;
+  }
+  .file-content {
+    overflow-y: auto;
+    height: 110%;
+    .item-file {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 26px;
+      border-bottom: 1px solid #bdbdbd;
+      padding-bottom: 6px;
+      margin-top: 12px;
+      div {
+        display: flex;
+        color: #8a8a8a;
+      }
+      .file-name {
+        font-size: 16px;
+        cursor: pointer;
+        i {
+          color: #8a8a8a;
+          margin-right: 4px;
+        }
+      }
+      .file-date,
+      .file-user {
+        font-weight: 300;
+      }
+      i {
+        font-size: 18px;
+        color: #515151;
+        cursor: pointer;
+      }
+    }
+    @include scrollbar;
+  }
+}

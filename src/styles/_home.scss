@@ -1,0 +1,68 @@
+.home {
+  h5 {
+    font-weight: 600;
+    font-size: 36px;
+    color: #444444;
+    text-align: center;
+  }
+  .card-containter {
+    margin: 28px 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    > div {
+      position: relative;
+      width: 368px;
+      height: 160px;
+      border-radius: 4px;
+      background-color: #f5f5f5;
+      padding: 14px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      div {
+        color: #2f2f2f;
+        h4 {
+          font-size: 70px;
+          font-weight: bold;
+        }
+        h3 {
+          font-weight: 500;
+          font-size: 46px;
+        }
+      }
+      i {
+        position: absolute;
+        font-size: 112px;
+        color: rgba(103, 103, 103, 0.47);
+        right: 14px;
+      }
+    }
+  }
+  .activities {
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      color: #000000;
+      text-align: center;
+    }
+    .btns {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      button {
+        margin: 0 0 16px 22px;
+        background-color: #f3f3f3;
+        border: none;
+        height: 42px;
+        width: 260px;
+        border-radius: $br-btn;
+        font-weight: 600;
+        font-size: 20px;
+        color: #5a5a5a;
+        cursor: pointer;
+      }
+    }
+  }
+}
