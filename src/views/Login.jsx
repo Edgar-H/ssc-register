@@ -3,11 +3,8 @@ import { LoginService } from '../hooks/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
 import { useNavigate } from 'react-router-dom';
-import PrivateRoutes from '../routes/PrivateRoutes';
 
 const Login = () => {
-  const user = true;
-
   const [username, setUsername] = useState(),
     [password, setPassword] = useState(),
     [error, setError] = useState(),
