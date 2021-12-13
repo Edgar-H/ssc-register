@@ -1,0 +1,94 @@
+.login-container {
+  width: 100%;
+  height: 100vh !important;
+  @include df-center;
+}
+.login {
+  width: inherit;
+  height: inherit;
+  @include df-center;
+  box-shadow: 0px 4px 30px -11px rgba(0, 0, 0, 0.26);
+  border-radius: $br-content;
+  overflow: hidden;
+
+  .form-login {
+    width: 86%;
+    max-width: 380px;
+    padding: 40px 20px;
+    position: absolute;
+    z-index: 9;
+    background-color: $bg-content;
+    border-radius: $br-content;
+  }
+  .logos {
+    @include df-center;
+    img {
+      height: 100%;
+      max-height: 80px;
+    }
+  }
+  form {
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    label,
+    input,
+    button {
+      width: 100%;
+    }
+    label {
+      color: $cl-text-label;
+      margin-bottom: 4px;
+    }
+    input {
+      background-color: $bg-input;
+      height: 40px;
+      border-radius: $br-input;
+      margin-bottom: 12px;
+      padding: 0 12px;
+      color: $cl-text-input;
+    }
+    button {
+      background-color: $bg-btn-submit;
+      margin-top: 8px;
+      @include btn-all;
+    }
+  }
+
+  .unsplash {
+    height: 100%;
+    @include df-center;
+    img {
+      height: 100%;
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    background-color: $bg-content;
+    max-width: 690px;
+    max-height: 70vh;
+    > div {
+      max-width: 50%;
+    }
+    .form-login {
+      position: relative;
+      padding: 40px 30px;
+    }
+    .unsplash {
+      display: block;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+
+  @media screen and (min-width: 748px) {
+    .unsplash {
+      width: 100%;
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+  }
+}

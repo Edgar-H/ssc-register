@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { LogoutService } from '../services/auth';
+import { LogoutService } from '../hooks/useAuth';
 import logo from '../assets/logo.png';
 
 const GlobalNav = () => {

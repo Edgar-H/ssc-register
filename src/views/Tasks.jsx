@@ -1,13 +1,10 @@
-import React from 'react';
-import '../styles/tasks.scss';
-
 const Tasks = () => {
   return (
     <div className='tasks-container'>
-      <p>Tareas</p>
+      <p className='txt-headers'>Tareas</p>
       <form action='' className='tasks-form'>
         <div className='header-task'>
-          <div>
+          <div className='col-s-100 col-md-70'>
             <label htmlFor='title-task'>Titulo</label>
             <input
               type='text'
@@ -16,11 +13,11 @@ const Tasks = () => {
               placeholder='Lorem ipsum dolor sit.'
             />
           </div>
-          <div className='date-task'>
+          <div className='date-task col-s-100 col-md-20'>
             <label htmlFor='date-task'>Fecha</label>
             <input type='date' name='date-task' id='date-task' />
           </div>
-          <div>
+          <div className='col-s-100 col-md-10'>
             <label htmlFor='time-task'>Hora</label>
             <input type='time' name='time-task' id='time-task' />
           </div>
@@ -34,7 +31,9 @@ const Tasks = () => {
             rows='10'
           ></textarea>
         </div>
-        <button>Guardar</button>
+        <div className='btn-content'>
+          <button>Guardar</button>
+        </div>
       </form>
       <div className='task-items'>
         <div className='task'>

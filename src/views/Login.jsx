@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { LoginService } from '../services/auth';
+import React, { useState /* useEffect */ } from 'react';
+import { LoginService } from '../hooks/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
-import '../styles/login.scss';
 import { useNavigate } from 'react-router-dom';
+import PrivateRoutes from '../routes/PrivateRoutes';
 
 const Login = () => {
+  const user = true;
+
   const [username, setUsername] = useState(),
     [password, setPassword] = useState(),
     [error, setError] = useState(),
     [success, setSuccess] = useState();
+
+  /* useEffect(() => {
+    setError('Por favor ingresa usuario y contraseña');
+    setSuccess('Acceso correcto');
+  }, []); */
 
   const navigate = useNavigate();
 
@@ -56,7 +63,7 @@ const Login = () => {
           <form onSubmit={signIn}>
             {error && <p className='error-message'>{error}</p>}
             {success && <p className='success-message'>{success}</p>}
-            <label htmlFor='username'>Nomre de usuario</label>
+            <label htmlFor='username'>Nombre de usuario</label>
             <input
               type='text'
               name='username'

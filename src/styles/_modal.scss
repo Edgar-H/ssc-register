@@ -1,5 +1,3 @@
-@import './mixin';
-
 .modal {
   display: flex;
   position: fixed;
@@ -17,10 +15,10 @@
   background-color: #fcfcfc;
   width: 80%;
   max-width: 860px;
-  height: 85%;
+  height: 82%;
   max-height: 600px;
-  border-radius: 3px;
-  padding: 12px 0;
+  border-radius: $br-content;
+  padding: 12px 16px;
   > i {
     position: absolute;
     right: 8px;
@@ -36,23 +34,16 @@
     text-align: center;
   }
   .modal-view {
-    margin: 20px auto;
-    width: 90%;
+    margin: 10px auto;
     height: inherit;
   }
   .btn-modal {
-    position: absolute;
-    bottom: 10px;
-    right: 5%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 auto;
     button {
-      padding: 0 12px;
-      height: 38px;
-      background: #c4c4c4;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 18px;
-      color: #ffffff;
-      border: none;
+      background-color: $bg-btn-open;
+      @include btn-all;
     }
   }
 }
@@ -61,14 +52,17 @@
   overflow-y: auto;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin: 10px 0;
   > div {
-    height: 160px;
+    min-height: 140px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+  }
+  @media screen and (min-width: 600px) {
+    grid-template-columns: repeat(4, 1fr);
   }
   @include scrollbar;
 }
@@ -106,11 +100,14 @@
       .file-date,
       .file-user {
         font-weight: 300;
+        margin: 0 6px;
       }
       i {
         font-size: 18px;
         color: #515151;
         cursor: pointer;
+      }
+      @media screen and(min-width: 830px) {
       }
     }
     @include scrollbar;

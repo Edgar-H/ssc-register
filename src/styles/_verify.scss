@@ -29,16 +29,11 @@
   .btn-new {
     display: flex;
     justify-content: center;
+    margin: 40px 0;
     button {
       width: 200px;
-      height: 38px;
-      background-color: #c4c4c4;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-weight: 600;
-      font-size: 20px;
-      color: #ffffff;
+      background-color: $bg-btn-open;
+      @include btn-all;
     }
   }
 }

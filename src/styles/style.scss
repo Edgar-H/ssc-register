@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import './variable';
+@import './mixin';
 
 * {
   padding: 0;
@@ -10,21 +11,109 @@
   outline: none;
 }
 
-/* body {
-  background-color: $primary-100;
-} */
-
-.container {
-  width: 86%;
-  max-width: $max-w;
-  margin: 90px auto;
-}
 button {
   cursor: pointer;
 }
 
-@import './mixin';
-@import './GlobalNav';
-@import './NotFoundPage';
+input,
+button,
+textarea {
+  border: none;
+}
+
+@import './global-nav';
+
+body {
+  background-color: $primary-150;
+}
+
+.content-global {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  @include scrollbar;
+}
+
+.container {
+  width: 86%;
+  max-width: $max-w;
+  margin: 106px auto 0;
+}
+
+@import './login';
 @import './home';
 @import './search';
+@import './card-profile';
+@import './tasks';
+@import './verify';
+@import './register';
+@import './modal';
+@import './NotFoundPage';
+
+.txt-headers {
+  font-size: 24px;
+  font-weight: 600;
+  color: #282828;
+  text-align: center;
+}
+
+.form-filter {
+  max-width: 1180px;
+  margin: 32px auto;
+  padding: 16px;
+  border-radius: $br-content;
+  background-color: $bg-content;
+  box-shadow: 0px 4px 20px -6px rgba(0, 0, 0, 0.09);
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    div {
+      label {
+        @include label-filter;
+      }
+      input {
+        @include input-filter;
+      }
+      button {
+        background-color: $bg-btn-submit;
+        width: 158px;
+        @include btn-all;
+      }
+    }
+  }
+  .name {
+    width: 540px;
+  }
+  .date {
+    width: 188px;
+    input {
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+  .btn-check {
+    align-items: flex-end;
+  }
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 20px;
+}
+
+.error-message {
+  background-color: rgb(255, 0, 0, 0.2);
+  color: #5f0404;
+  @include message;
+}
+
+.success-message {
+  background-color: rgba(16, 174, 74, 0.2);
+  color: #045f25;
+  @include message;
+}

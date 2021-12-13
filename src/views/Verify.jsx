@@ -1,18 +1,21 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import CardProfile from '../components/CardProfile';
-import '../styles/verify.scss';
 
 const Verify = () => {
   const result = true;
   return (
     <div className='register'>
-      <h5>Registrar nueva detención</h5>
-      <form action='' className='form-container'>
+      <h5 className='txt-headers'>Registrar nueva detención</h5>
+      <form action='' className='form-filter'>
         <div className='form-group'>
           <div className='name'>
             <label htmlFor='name'>Nombre</label>
-            <input type='text' name='name' id='name' />
+            <input
+              type='text'
+              name='name'
+              id='name'
+              placeholder='nombre apellido apellido'
+            />
           </div>
           <div className='date'>
             <label htmlFor='date'>Fecha de nacimiento</label>
@@ -30,7 +33,9 @@ const Verify = () => {
             <CardProfile />
           </div>
           <div className='btn-new'>
-            <button>Nuevo registro</button>
+            <Link to='/register'>
+              <button>Nuevo registro</button>
+            </Link>
           </div>
         </>
       ) : (

@@ -4,13 +4,18 @@ import CardProfile from '../components/CardProfile';
 const Search = () => {
   return (
     <div className='search'>
-      <p>Registros de detenciones</p>
-      <form action='' className='form-container'>
-        <p>¿Buscar por?</p>
+      <p className='txt-headers'>Registros de detenciones</p>
+      <form action='' className='form-filter'>
+        <p>Filtrar por:</p>
         <div className='form-group'>
           <div className='name'>
             <label htmlFor='name'>Nombre</label>
-            <input type='text' name='name' id='name' />
+            <input
+              type='text'
+              name='name'
+              id='name'
+              placeholder='nombre apellido apellido'
+            />
           </div>
           <div className='date'>
             <label htmlFor='date'>Fecha de detencion</label>

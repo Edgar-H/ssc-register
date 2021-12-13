@@ -1,67 +1,3 @@
-.cards-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.form-container {
-  max-width: 1180px;
-  margin: 32px auto;
-  background: #fbfbfb;
-  box-shadow: 0px 4px 20px -6px rgba(0, 0, 0, 0.09);
-  border-radius: 6px;
-  padding: 12px 18px;
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 6px;
-    div {
-      margin: 0 0 16px 24px;
-      label {
-        width: 100%;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 22px;
-        color: #494949;
-      }
-      input {
-        width: 100%;
-        height: 26px;
-        border: none;
-        border-radius: 3px;
-        color: #757575;
-        font-size: 16px;
-        &:focus {
-          border-bottom: 2px solid #10ae4a44;
-        }
-      }
-      button {
-        background-color: #c4c4c4;
-        width: 152px;
-        height: 38px;
-        color: #fff;
-        font-weight: 600;
-        font-size: 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-    }
-  }
-  .name {
-    width: 540px;
-  }
-  .date {
-    width: 188px;
-    input {
-      text-align: center;
-    }
-  }
-  .btn-check {
-    align-items: flex-end;
-  }
-}
-
 @mixin scrollbar {
   &::-webkit-scrollbar {
     width: 8px;
@@ -69,12 +5,89 @@
     border-radius: 4px;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(218, 218, 218, 0.733);
+    background: rgba(24, 64, 124, 0.247);
     border-radius: 4px;
   }
   &::-webkit-scrollbar-thumb:hover {
     transition: all 0.5s linear;
     background: rgba(204, 204, 204, 0.733);
     border-radius: 4px;
+  }
+}
+
+@mixin df-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin message {
+  display: inline-block;
+  margin: 4px auto 8px;
+  text-align: center;
+  font-style: italic;
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 300;
+  border-radius: $br-content;
+}
+
+@mixin btn-all {
+  height: 46.8px;
+  border-radius: $br-btn;
+  font-size: 18px;
+  font-weight: 600;
+  color: $primary-50;
+}
+
+@mixin label-filter {
+  width: 100%;
+  font-weight: 500;
+  font-size: 16px;
+  color: $cl-text-label;
+  margin-bottom: 5px;
+}
+
+@mixin input-filter {
+  width: 100%;
+  height: 40px;
+  border-radius: $br-input;
+  color: $cl-text-input;
+  font-size: 16px;
+  background-color: $bg-input;
+  text-transform: capitalize;
+  &:focus {
+    border-bottom: 2px solid #10ae4a44;
+  }
+}
+
+/* Media queries */
+$bp: (
+  m: 600px,
+  l: 992px,
+);
+
+/* Extra small devices (phones, 600px and down) */
+@for $i from 1 through 20 {
+  .col-s-#{$i * 5} {
+    width: $i * 5%;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: map-get($bp,m)) {
+  @for $i from 1 through 20 {
+    .col-m-#{$i * 5} {
+      width: $i * 5%;
+    }
+  }
+}
+
+/* Medium devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: map-get($bp,l)) {
+  @for $i from 1 through 20 {
+    .col-l-#{$i * 5} {
+      width: $i * 5%;
+    }
   }
 }

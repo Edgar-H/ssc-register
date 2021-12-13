@@ -1,5 +1,3 @@
-import '../styles/modal.scss';
-
 const Modal = ({ children, modalView, closeButton }) => {
   const handleModalContainerClick = (e) => e.stopPropagation();
   return (
@@ -9,7 +7,7 @@ const Modal = ({ children, modalView, closeButton }) => {
         <h3>{modalView} cargadas</h3>
         <div className='modal-view'>{children}</div>
         <div className='btn-modal'>
-          <button>
+          <button className='col-s-100 col-m-25'>
             <i className='fas fa-plus'></i> {modalView}
           </button>
         </div>

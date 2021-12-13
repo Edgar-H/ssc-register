@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { getProfiles } from '../services/profiles';
-import '../styles/card_profile.scss';
 
 const CardProfile = () => {
   let profiles = getProfiles();
@@ -14,6 +13,7 @@ const CardProfile = () => {
           to={`/register/${u.id}`}
           style={{ textDecoration: 'none' }}
           key={u.id}
+          className='col-s-100 col-m-50 col-l-30 card-link'
         >
           <div className='card-profile'>
             <div
