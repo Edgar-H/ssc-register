@@ -1,19 +1,20 @@
 import React, { useState /* useEffect */ } from 'react';
-import { LoginService } from '../hooks/useAuth';
+import useAuth /* LoginService */ from '../auth/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 const Login = () => {
+  const auth = useAuth();
+
+  const handleLogin = () => {
+    auth.login();
+  };
+
   const [username, setUsername] = useState(),
     [password, setPassword] = useState(),
     [error, setError] = useState(),
     [success, setSuccess] = useState();
-
-  /* useEffect(() => {
-    setError('Por favor ingresa usuario y contraseña');
-    setSuccess('Acceso correcto');
-  }, []); */
 
   const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ const Login = () => {
       window.localStorage.setItem('logged_in', JSON.stringify(user));
     };
 
-    try {
+    /* try {
       const getAuth = await LoginService({ username, password });
       saveAuth(getAuth);
       setSuccess('Acceso correcto');
@@ -46,10 +47,12 @@ const Login = () => {
         default:
           break;
       }
-    }
+    } */
   };
 
-  return (
+  return auth.user ? (
+    <Navigate to='/' />
+  ) : (
     <div className='login-container'>
       <div className='login'>
         <div className='form-login'>
@@ -76,7 +79,7 @@ const Login = () => {
               placeholder='Contraseña'
               onChange={(target) => setPassword(target.value)}
             />
-            <button type='submit'>Ingresar</button>
+            <button onClick={handleLogin}>Ingresar</button>
           </form>
         </div>
         <div className='unsplash'>

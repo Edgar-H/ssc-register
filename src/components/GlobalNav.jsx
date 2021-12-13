@@ -1,14 +1,11 @@
 import React from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { LogoutService } from '../hooks/useAuth';
+import { Link, NavLink } from 'react-router-dom';
+// import { LogoutService } from '../auth/useAuth';
 import logo from '../assets/logo.png';
+import useAuth from '../auth/useAuth';
 
 const GlobalNav = () => {
-  const navigate = useNavigate();
-  const logout = () => {
-    LogoutService();
-    navigate('login', { replace: true });
-  };
+  const { logout } = useAuth();
 
   return (
     <nav>
@@ -37,7 +34,7 @@ const GlobalNav = () => {
           <li>
             <NavLink to='/verify'>Registrar</NavLink>
           </li>
-          <li onClick={() => logout()}>
+          <li onClick={logout}>
             <i className='fas fa-user'></i>
           </li>
         </ul>
