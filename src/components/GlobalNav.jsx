@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-// import { LogoutService } from '../auth/useAuth';
 import logo from '../assets/logo.png';
 import useAuth from '../auth/useAuth';
 

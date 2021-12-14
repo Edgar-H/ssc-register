@@ -1,5 +1,5 @@
-import React, { useState /* useEffect */ } from 'react';
-import useAuth /* LoginService */ from '../auth/useAuth';
+import React, { useState } from 'react';
+import useAuth from '../auth/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
 import { useNavigate, Navigate } from 'react-router-dom';
@@ -21,33 +21,20 @@ const Login = () => {
   const signIn = async (e) => {
     e.preventDefault();
     setError('');
+
     if (!username || !password) {
       return setError('Por favor ingresa usuario y contraseña');
     }
 
-    const saveAuth = (user) => {
-      window.localStorage.setItem('logged_in', JSON.stringify(user));
-    };
-
-    /* try {
-      const getAuth = await LoginService({ username, password });
-      saveAuth(getAuth);
+    try {
+      // const getAuth = await LoginService({ username, password });
       setSuccess('Acceso correcto');
       setUsername('');
       setPassword('');
       navigate('/', { replace: true });
     } catch (err) {
-      switch (err.message) {
-        case 'wrong-password':
-          setError('Contraseña inavlida');
-          break;
-        case 'user-not-found':
-          setError('Usuario incorrecto');
-          break;
-        default:
-          break;
-      }
-    } */
+      console.log(err);
+    }
   };
 
   return auth.user ? (
