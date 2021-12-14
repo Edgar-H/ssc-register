@@ -4,20 +4,30 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [userAuth, setUserAuth] = useState(
-    JSON.parse(window.localStorage.getItem('userAuth')) || null
+    JSON.parse(window.sessionStorage.getItem('userAuth')) || null
   );
 
   useEffect(() => {
-    window.localStorage.setItem('userAuth', JSON.stringify(userAuth));
+    try {
+      window.sessionStorage.setItem('userAuth', JSON.stringify(userAuth));
+    } catch (err) {
+      window.sessionStorage.removeItem('userAuth');
+      console.log(err);
+    }
   }, [userAuth]);
 
   const contextValue = {
     userAuth,
-    login() {
-      setUserAuth({ id: 1, username: 'Pablito' });
+    login(loginData) {
+      setUserAuth(loginData);
     },
     logout() {
-      setUserAuth(window.localStorage.removeItem('userAuth'));
+      try {
+        window.sessionStorage.removeItem('userAuth');
+        setUserAuth(null);
+      } catch (err) {
+        console.log(err);
+      }
     },
     isLoggedIn() {
       return !!userAuth;

@@ -2,42 +2,34 @@ import React, { useState } from 'react';
 import useAuth from '../auth/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
   const auth = useAuth();
 
-  const handleLogin = () => {
-    auth.login();
-  };
-
-  const [username, setUsername] = useState(),
-    [password, setPassword] = useState(),
-    [error, setError] = useState(),
+  const [error, setError] = useState(),
     [success, setSuccess] = useState();
 
-  const navigate = useNavigate();
-
-  const signIn = async (e) => {
-    e.preventDefault();
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (loginData) => {
+    const { userName, password } = loginData;
     setError('');
 
-    if (!username || !password) {
+    if (!userName || !password) {
       return setError('Por favor ingresa usuario y contraseña');
     }
 
     try {
-      // const getAuth = await LoginService({ username, password });
+      auth.login(loginData);
+      setError('');
       setSuccess('Acceso correcto');
-      setUsername('');
-      setPassword('');
-      navigate('/', { replace: true });
     } catch (err) {
       console.log(err);
     }
   };
 
-  return auth.user ? (
+  return auth.userAuth ? (
     <Navigate to='/' />
   ) : (
     <div className='login-container'>
@@ -47,26 +39,24 @@ const Login = () => {
             <img src={cdmx} alt='' />
             <img src={police} alt='' />
           </div>
-          <form onSubmit={signIn}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {error && <p className='error-message'>{error}</p>}
             {success && <p className='success-message'>{success}</p>}
             <label htmlFor='username'>Nombre de usuario</label>
             <input
               type='text'
-              name='username'
               id='username'
               placeholder='username'
-              onChange={(target) => setUsername(target.value)}
+              {...register('userName')}
             />
             <label htmlFor='password'>Contraseña</label>
             <input
               type='password'
-              name='password'
               id='password'
               placeholder='Contraseña'
-              onChange={(target) => setPassword(target.value)}
+              {...register('password')}
             />
-            <button onClick={handleLogin}>Ingresar</button>
+            <button onClick={handleSubmit(onSubmit)}>Ingresar</button>
           </form>
         </div>
         <div className='unsplash'>

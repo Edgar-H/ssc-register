@@ -3,7 +3,7 @@ import useAuth from '../auth/useAuth';
 
 const PrivateRoutes = () => {
   const auth = useAuth();
-  return auth.user ? <Outlet /> : <Navigate to='/login' />;
+  return auth.userAuth ? <Outlet /> : <Navigate to='/login' />;
 };
 
 export default PrivateRoutes;
