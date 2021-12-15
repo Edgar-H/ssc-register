@@ -2,9 +2,17 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import useAuth from '../auth/useAuth';
+import app from '../services/firebase/firebaseConfig';
+import { getAuth, signOut } from 'firebase/auth';
 
 const GlobalNav = () => {
-  const { logout } = useAuth();
+  const auth = getAuth(app);
+  const { logout, userAuth } = useAuth();
+
+  const logoutUser = () => {
+    logout();
+    signOut(auth);
+  };
 
   return (
     <nav>
@@ -33,7 +41,13 @@ const GlobalNav = () => {
           <li>
             <NavLink to='/verify'>Registrar</NavLink>
           </li>
-          <li onClick={logout}>
+          {userAuth.role === 'admin' && (
+            <li>
+              <NavLink to='/registerusers'>add users</NavLink>
+            </li>
+          )}
+
+          <li onClick={logoutUser}>
             <i className='fas fa-user'></i>
           </li>
         </ul>

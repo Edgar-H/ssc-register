@@ -10,6 +10,7 @@ import Register from '../views/Register';
 import GlobalNav from '../components/GlobalNav';
 import PrivateRoutes from './PrivateRoutes';
 import AuthProvider from '../auth/AuthProvider';
+import RegisterUsers from '../views/RegisterUsers';
 
 const Router = () => {
   return (
@@ -17,6 +18,7 @@ const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route path='login' element={<Login />} />
+          <Route path='registerusers' element={<RegisterUsers />} />
           <Route element={<PrivateRoutes />}>
             <Route path='/' element={<Layout />}>
               <Route index element={<Home />} />

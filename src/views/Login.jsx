@@ -4,32 +4,70 @@ import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
 import { Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import app from '../services/firebase/firebaseConfig';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const Login = () => {
-  const auth = useAuth();
+  const user = useAuth();
+  const auth = getAuth(app);
+  const firestore = getFirestore(app);
 
   const [error, setError] = useState(),
     [success, setSuccess] = useState();
 
   const { register, handleSubmit } = useForm();
-  const onSubmit = (loginData) => {
-    const { userName, password } = loginData;
+
+  const onSubmit = async (loginData) => {
+    const { email, password } = loginData;
     setError('');
 
-    if (!userName || !password) {
-      return setError('Por favor ingresa usuario y contraseña');
+    if (!email || !password) {
+      return setError('Por favor ingresa correo y contraseña');
     }
 
+    const getDataUser = async (uid) => {
+      const docRef = doc(firestore, `users/${uid}`);
+      const getUser = await getDoc(docRef);
+      const dataUser = getUser.data();
+      return dataUser;
+    };
+
     try {
-      auth.login(loginData);
+      const userLogin = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).then((userFirebase) => {
+        return userFirebase;
+      });
+      getDataUser(userLogin.user.uid).then((userAuth) => {
+        const loginData = {
+          name: userAuth.name,
+          employeeNumber: userAuth.employeeNumber,
+          email: userAuth.email,
+          role: userAuth.role,
+        };
+        user.login(loginData);
+      });
+
       setError('');
       setSuccess('Acceso correcto');
     } catch (err) {
-      console.log(err);
+      setSuccess('');
+      switch (err.code) {
+        case 'auth/invalid-email':
+          return setError('El correo no es válido');
+        case 'auth/user-not-found':
+          return setError('El usuario no existe');
+        case 'auth/wrong-password':
+          return setError('La contraseña es incorrecta');
+        default:
+          break;
+      }
     }
   };
-
-  return auth.userAuth ? (
+  return user.userAuth ? (
     <Navigate to='/' />
   ) : (
     <div className='login-container'>
@@ -42,12 +80,12 @@ const Login = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             {error && <p className='error-message'>{error}</p>}
             {success && <p className='success-message'>{success}</p>}
-            <label htmlFor='username'>Nombre de usuario</label>
+            <label htmlFor='email'>Correo electrónico</label>
             <input
-              type='text'
-              id='username'
-              placeholder='username'
-              {...register('userName')}
+              type='email'
+              id='email'
+              placeholder='example@example.com'
+              {...register('email')}
             />
             <label htmlFor='password'>Contraseña</label>
             <input

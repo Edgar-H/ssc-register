@@ -1,10 +1,12 @@
 import { Link, Outlet } from 'react-router-dom';
+import useAuth from '../auth/useAuth';
 
 const Home = () => {
+  const { userAuth } = useAuth();
   return (
     <>
       <div className='home'>
-        <h5>Hola Mauricio</h5>
+        <h5>Hola {userAuth.name}</h5>
         <div className='card-containter'>
           <div className='card'>
             <div className='info'>
