@@ -1,6 +1,4 @@
-# Regisros de detenidos por la SSC
-
-Este proyecto es de uso exclusivo por personal autorizado por la SSC, toda la información guardada por el personal autorizado no es accesible, mas sin enbargo el codigo del front es abierto con la finalidad de recibir retros que ayuden a mejorar la seguridad del mismo, se solicita no hacer mal eso de este codigo, evitemos vulnerar nuestra seguridad y los esfuerzos que realizan el personal que nos protege.
+# `Proyecto En Desarrollo`
 
 ## Creditos
 

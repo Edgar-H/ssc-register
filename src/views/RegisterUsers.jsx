@@ -18,8 +18,15 @@ const RegisterUsers = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (loginData) => {
-    const { role, name, employeeNumber, email, password, passwordConfirm } =
-      loginData;
+    const {
+      role,
+      name,
+      lastName,
+      employeeNumber,
+      email,
+      password,
+      passwordConfirm,
+    } = loginData;
     setError('');
 
     if (!role || !email || !password || !passwordConfirm) {
@@ -33,12 +40,10 @@ const RegisterUsers = () => {
         auth,
         email,
         password
-      ).then((userFirebase) => {
-        return userFirebase;
-      });
+      ).then((userFirebase) => userFirebase);
 
       const docRef = await doc(firestore, `users/${userRegistration.user.uid}`);
-      setDoc(docRef, { name, employeeNumber, email, role });
+      setDoc(docRef, { name, lastName, employeeNumber, email, role });
       if (userRegistration.operationType === 'signIn') {
         setError('');
         setSuccess('Usuario registrado correctamente');
@@ -57,9 +62,9 @@ const RegisterUsers = () => {
     }
   };
   return (
-    <div className='login-container'>
-      <div className='login'>
-        <div className='form-login'>
+    <div className='register-users-container'>
+      <div className='regitser-users'>
+        <div className='form-register-users'>
           <div className='logos'>
             <img src={cdmx} alt='' />
             <img src={police} alt='' />
@@ -72,12 +77,19 @@ const RegisterUsers = () => {
               <option value='admin'>Administrador</option>
               <option value='user'>Usuario</option>
             </select>
-            <label htmlFor='name'>Nombre completo</label>
+            <label htmlFor='name'>Nombre</label>
             <input
               type='text'
               id='name'
-              placeholder='Nombre Apellido'
+              placeholder='Nombre'
               {...register('name')}
+            />
+            <label htmlFor='lastName'>Apellido</label>
+            <input
+              type='text'
+              id='lastName'
+              placeholder='Apellido'
+              {...register('lastName')}
             />
             <label htmlFor='employeeNumber'>Numero de empleado</label>
             <input
@@ -110,12 +122,6 @@ const RegisterUsers = () => {
             <button onClick={handleSubmit(onSubmit)}>Registrar</button>
             <button onClick={navigate('/')}>Home</button>
           </form>
-        </div>
-        <div className='unsplash'>
-          <img
-            src='https://images.unsplash.com/flagged/photo-1560177776-55a762c5c000?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80'
-            alt=''
-          />
         </div>
       </div>
     </div>
