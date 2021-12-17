@@ -17,7 +17,8 @@ button {
 
 input,
 button,
-textarea {
+textarea,
+select {
   border: none;
 }
 
@@ -49,6 +50,7 @@ body {
 @import './register';
 @import './modal';
 @import './NotFoundPage';
+@import './register-users';
 
 .txt-headers {
   font-size: 24px;

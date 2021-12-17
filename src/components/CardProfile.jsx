@@ -3,7 +3,6 @@ import { getProfiles } from '../services/profiles';
 
 const CardProfile = () => {
   let profiles = getProfiles();
-  console.log(profiles);
 
   return (
     <>

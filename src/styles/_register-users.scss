@@ -1,0 +1,114 @@
+.register-users-container {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  background-color: $bg-content;
+  padding: 16px;
+  margin: 10px auto 30px;
+  h2 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: $cl-text-titles;
+  }
+}
+
+.forms-admin-users {
+  padding-right: 8px;
+  border-right: 1px solid $primary-300;
+  form {
+    width: 100%;
+    label,
+    input,
+    select,
+    button {
+      width: 100%;
+    }
+    label {
+      @include label-filter;
+    }
+    input {
+      margin: 5px 0 14px;
+      @include input-filter;
+    }
+    button {
+      @include btn-all;
+      height: 40px;
+    }
+  }
+  .form-filter-users {
+    button {
+      background-color: $bg-btn-open;
+    }
+  }
+  .form-register-users {
+    select {
+      margin-top: 5px;
+      height: 38px;
+      background-color: $bg-input;
+    }
+    button {
+      background-color: $bg-btn-submit;
+    }
+  }
+  > div {
+    margin: 20px 0;
+    background-color: red;
+    width: 100%;
+    border-bottom: 1px solid $primary-300;
+  }
+}
+
+.registered-users {
+  height: 100%;
+  overflow-y: auto;
+  div {
+    display: flex;
+    div {
+      padding-bottom: 4px;
+      justify-content: space-around;
+      border-bottom: 1px solid $primary-300;
+      margin-bottom: 8px;
+      align-items: flex-end;
+    }
+    .user-data {
+      width: 85%;
+      p {
+        color: $cl-text-label;
+      }
+      .status {
+        font-weight: 500;
+      }
+      .active {
+        color: #0ba832;
+      }
+      .inactive {
+        color: #db0c0c;
+      }
+      .holidays {
+        color: #ffc107;
+      }
+    }
+
+    .btns-actions {
+      width: 15%;
+      i {
+        padding: 4px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .fa-user-times {
+        color: rgb(255, 0, 0);
+        &:hover {
+          color: rgba(230, 40, 40, 0.58);
+        }
+      }
+      .fa-user-edit {
+        color: rgb(112, 158, 27);
+        &:hover {
+          color: rgba(101, 158, 27, 0.58);
+        }
+      }
+    }
+  }
+}

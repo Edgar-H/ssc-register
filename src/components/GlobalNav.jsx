@@ -43,7 +43,7 @@ const GlobalNav = () => {
           </li>
           {userAuth.role === 'admin' && (
             <li>
-              <NavLink to='/registerusers'>add users</NavLink>
+              <NavLink to='/registerusers'>Usuarios</NavLink>
             </li>
           )}
 

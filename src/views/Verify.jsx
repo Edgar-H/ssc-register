@@ -5,7 +5,7 @@ const Verify = () => {
   const result = true;
   return (
     <div className='register'>
-      <h5 className='txt-headers'>Registrar nueva detención</h5>
+      <h5 className='txt-headers'>Verificar registros</h5>
       <form action='' className='form-filter'>
         <div className='form-group'>
           <div className='name'>

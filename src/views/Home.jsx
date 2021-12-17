@@ -26,14 +26,14 @@ const Home = () => {
         <div className='activities'>
           <p>¿Que vamos a hacer hoy?</p>
           <div className='btns'>
-            <Link to='/search'>
+            <Link to='search'>
               <button>Buscar</button>
             </Link>
-            <Link to='/register'>
-              <button>Nuevo registro</button>
+            <Link to='verify'>
+              <button>Registrar detenido</button>
             </Link>
-            <Link to='/'>
-              <button>Generar reporte</button>
+            <Link to='registerusers'>
+              <button>Administrar usuarios</button>
             </Link>
           </div>
         </div>
