@@ -108,14 +108,19 @@ body {
   margin: 0 auto 20px;
 }
 
-.error-message {
-  background-color: rgb(255, 0, 0, 0.2);
-  color: #5f0404;
-  @include message;
-}
-
-.success-message {
-  background-color: rgba(16, 174, 74, 0.2);
-  color: #045f25;
-  @include message;
+.message {
+  display: flex;
+  justify-content: center;
+  margin: 8px auto 12px;
+  p {
+    @include message;
+  }
+  .error-message {
+    background-color: rgb(255, 0, 0, 0.2);
+    color: #5f0404;
+  }
+  .success-message {
+    background-color: rgba(16, 174, 74, 0.2);
+    color: #045f25;
+  }
 }

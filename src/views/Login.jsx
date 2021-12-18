@@ -78,10 +78,13 @@ const Login = () => {
             <img src={police} alt='' />
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {error && <p className='error-message'>{error}</p>}
-            {success && <p className='success-message'>{success}</p>}
+            <div className='message'>
+              {error && <p className='error-message message'>{error}</p>}
+              {success && <p className='success-message message'>{success}</p>}
+            </div>
             <label htmlFor='email'>Correo electrónico</label>
             <input
+              style={{ textTransform: 'lowercase' }}
               type='email'
               id='email'
               placeholder='example@example.com'
