@@ -39,12 +39,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
-
-/* const LoginService = async (credentials) => {
-  try {
-    const { data } = await axios.get(baseUrl, credentials);
-    return data;
-  } catch (err) {
-    return err;
-  }
-}; */

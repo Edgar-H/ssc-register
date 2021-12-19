@@ -114,6 +114,7 @@ body {
   margin: 8px auto 12px;
   p {
     @include message;
+    text-align: center;
   }
   .error-message {
     background-color: rgb(255, 0, 0, 0.2);

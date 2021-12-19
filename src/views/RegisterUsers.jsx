@@ -22,6 +22,8 @@ const RegisterUsers = () => {
     [viewForm, setViewForm] = useState(false);
 
   const view = () => {
+    setError('');
+    setSuccess('');
     viewForm ? setViewForm(false) : setViewForm(true);
   };
 
@@ -29,13 +31,14 @@ const RegisterUsers = () => {
 
   const filterUser = (e) => {
     e.preventDefault();
-    if (!nameUser && !numberId) {
+    if (!nameUser || !numberId) {
       setError('Por favor ingresa datos para filtrar');
     }
     if (nameUser) {
     }
   };
 
+  console.log('uwu');
   const getUsers = async () => {
     try {
       const userscollection = collection(firestore, 'users');
@@ -47,6 +50,7 @@ const RegisterUsers = () => {
   };
   useEffect(() => {
     getUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (loginData) => {
@@ -175,6 +179,10 @@ const RegisterUsers = () => {
             <>
               <form className='form-filter-users'>
                 <h2>Filtrar usuario</h2>
+                <div className='message'>
+                  {error && <p className='error-message'>{error}</p>}
+                  {success && <p className='success-message'>{success}</p>}
+                </div>
                 <label htmlFor='name-user'>Nombre</label>
                 <input
                   type='text'
@@ -198,15 +206,15 @@ const RegisterUsers = () => {
         </div>
         <div className='registered-users'>
           <h2>Usuarios registrados</h2>
-          {userList?.map((i) => (
-            <div className='user-item' key={i.employeeNumber}>
+          {userList?.map((_user) => (
+            <div className='user-item' key={_user.employeeNumber}>
               <span>
-                {i.name} {i.lastName}
+                {_user.name} {_user.lastName}
               </span>
-              <span>No: {i.employeeNumber}</span>
+              <span>No: {_user.employeeNumber}</span>
               <span className='status holidays'>Activo</span>
-              <span>Rol: {i.role}</span>
-              <span>{i.email}</span>
+              <span>Rol: {_user.role}</span>
+              <span>{_user.email}</span>
               <div className='btns-actions'>
                 <i className='fas fa-user-times'></i>
                 <i className='fas fa-user-edit'></i>

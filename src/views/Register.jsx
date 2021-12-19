@@ -90,10 +90,10 @@ const Register = () => {
               </div>
               <div className='gender col-s-100 col-m-25'>
                 <label htmlFor='gender'>Sexo</label>
-                <select name='gender' id='gender'>
+                {/* <select name='gender' id='gender'>
                   <option value='Hombre'>Hombre</option>
                   <option value='Mujer'>Mujer</option>
-                </select>
+                </select> */}
                 <input type='text' name='gender' id='gender' />
               </div>
               <div className='tattoos col-s-100 col-m-25'>
