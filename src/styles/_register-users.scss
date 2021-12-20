@@ -92,6 +92,7 @@ form {
   button {
     @include btn-all;
     height: 40px;
+    margin-top: 10px;
   }
 }
 .form-filter-users {
@@ -107,16 +108,21 @@ form {
   }
   button {
     background-color: $bg-btn-submit;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  .btn-cancel {
+    background-color: $cl-text-input;
   }
 }
 
 .registered-users {
   height: 100%;
   overflow-y: auto;
-  border: 1px solid red;
   > div {
     display: grid;
-    grid-template-columns: 2fr repeat(3, 1fr) 1.5fr 0.6fr;
+    grid-template-columns: 2fr repeat(2, 1.2fr) 1.6fr 1.5fr 0.6fr;
     align-items: flex-end;
     margin: 0 0 8px 16px;
     border-bottom: 1px solid $primary-300;
@@ -139,6 +145,7 @@ form {
     .btns-actions {
       display: flex;
       justify-content: space-evenly;
+
       i {
         padding: 4px;
         font-size: 18px;

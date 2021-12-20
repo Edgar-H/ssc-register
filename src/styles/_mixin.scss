@@ -54,6 +54,7 @@
   font-size: 16px;
   background-color: $bg-input;
   text-transform: capitalize;
+  padding: 0 5px;
   &:focus {
     border-bottom: 2px solid #10ae4a44;
   }

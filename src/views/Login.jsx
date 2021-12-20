@@ -5,7 +5,7 @@ import police from '../assets/logo-police.png';
 import { Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import app from '../services/firebase/firebaseConfig';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const Login = () => {
@@ -29,8 +29,7 @@ const Login = () => {
     const getDataUser = async (uid) => {
       const docRef = doc(firestore, `users/${uid}`);
       const getUser = await getDoc(docRef);
-      const dataUser = getUser.data();
-      return dataUser;
+      return getUser.data();
     };
 
     try {
@@ -42,17 +41,33 @@ const Login = () => {
         return userFirebase;
       });
       getDataUser(userLogin.user.uid).then((userAuth) => {
-        const loginData = {
-          name: userAuth.name,
-          employeeNumber: userAuth.employeeNumber,
-          email: userAuth.email,
-          role: userAuth.role,
-        };
-        user.login(loginData);
+        if (userAuth) {
+          switch (userAuth.status) {
+            case 'active':
+              const loginData = {
+                name: userAuth.name,
+                employeeNumber: userAuth.employeeNumber,
+                email: userAuth.email,
+                role: userAuth.role,
+              };
+              user.login(loginData);
+              setError('');
+              setSuccess('Acceso correcto');
+              break;
+            case 'inactive':
+              setError('Usuario temporalmente suspendido');
+              break;
+            case 'holidays':
+              setError('El usuario no trabaja en este momento');
+              break;
+            default:
+              break;
+          }
+        } else {
+          setError('La cuenta ya fue dado de baja');
+          signOut(auth);
+        }
       });
-
-      setError('');
-      setSuccess('Acceso correcto');
     } catch (err) {
       setSuccess('');
       switch (err.code) {
