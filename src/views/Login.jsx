@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import useAuth from '../auth/useAuth';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
+import useAuth from '../auth/useAuth';
 import { Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import app from '../services/firebase/firebaseConfig';
@@ -32,55 +32,50 @@ const Login = () => {
       return getUser.data();
     };
 
-    try {
-      const userLogin = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      ).then((userFirebase) => {
-        return userFirebase;
-      });
-      getDataUser(userLogin.user.uid).then((userAuth) => {
-        if (userAuth) {
-          switch (userAuth.status) {
-            case 'active':
-              const loginData = {
-                name: userAuth.name,
-                employeeNumber: userAuth.employeeNumber,
-                email: userAuth.email,
-                role: userAuth.role,
-              };
-              user.login(loginData);
-              setError('');
-              setSuccess('Acceso correcto');
-              break;
-            case 'inactive':
-              setError('Usuario temporalmente suspendido');
-              break;
-            case 'holidays':
-              setError('El usuario no trabaja en este momento');
-              break;
-            default:
-              break;
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((userFirebase) => {
+        getDataUser(userFirebase.user.uid).then((userAuth) => {
+          if (userAuth) {
+            switch (userAuth.status) {
+              case 'active':
+                const loginData = {
+                  name: userAuth.name,
+                  employeeNumber: userAuth.employeeNumber,
+                  email: userAuth.email,
+                  role: userAuth.role,
+                };
+                user.login(loginData);
+                setError('');
+                setSuccess('Acceso correcto');
+                break;
+              case 'inactive':
+                setError('Usuario temporalmente suspendido');
+                break;
+              case 'holidays':
+                setError('El usuario no trabaja en este momento');
+                break;
+              default:
+                break;
+            }
+          } else {
+            setError('La cuenta ya fue dado de baja');
+            signOut(auth);
           }
-        } else {
-          setError('La cuenta ya fue dado de baja');
-          signOut(auth);
+        });
+      })
+      .catch((err) => {
+        setSuccess('');
+        switch (err.code) {
+          case 'auth/invalid-email':
+            return setError('El correo no es válido');
+          case 'auth/user-not-found':
+            return setError('El usuario no existe');
+          case 'auth/wrong-password':
+            return setError('La contraseña es incorrecta');
+          default:
+            break;
         }
       });
-    } catch (err) {
-      setSuccess('');
-      switch (err.code) {
-        case 'auth/invalid-email':
-          return setError('El correo no es válido');
-        case 'auth/user-not-found':
-          return setError('El usuario no existe');
-        case 'auth/wrong-password':
-          return setError('La contraseña es incorrecta');
-        default:
-          break;
-      }
-    }
   };
   return user.userAuth ? (
     <Navigate to='/' />

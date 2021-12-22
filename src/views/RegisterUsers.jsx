@@ -16,30 +16,31 @@ const RegisterUsers = () => {
   const auth = getAuth(app);
   const firestore = getFirestore(app);
 
-  const [error, setError] = useState(),
-    [success, setSuccess] = useState(),
-    [nameUser, setNameUser] = useState(),
-    [numberId, setNumberId] = useState(),
+  const [error, setError] = useState(''),
+    [success, setSuccess] = useState(''),
+    [nameUser, setNameUser] = useState(''),
+    [numberId, setNumberId] = useState(''),
     [userList, setUserList] = useState(),
     [viewForm, setViewForm] = useState(false),
     [modeEdit, setModeEdit] = useState(false),
-    [id, setId] = useState(),
-    [dataUser, setDataUser] = useState();
+    [id, setId] = useState(''),
+    [dataUser, setDataUser] = useState('');
+
+  useEffect(() => {
+    getUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getUsers = async () => {
     try {
       const userscollection = collection(firestore, 'users');
       const userList = await getDocs(userscollection);
       setUserList(userList.docs.map((doc) => doc.data()));
+      console.log('se ejecuto getUsers');
     } catch (err) {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const view = () => {
     setError('');
@@ -95,6 +96,9 @@ const RegisterUsers = () => {
           status: 'active',
         });
         setSuccess('Usuario registrado correctamente');
+        setTimeout(() => {
+          setSuccess('');
+        }, 3000);
       }
     } catch (err) {
       switch (err.code) {
