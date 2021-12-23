@@ -12,4 +12,6 @@ Con la iniciativa de @Anonimo para mejorar la gestion y control de los detenidos
 
 Estos son algunos de los recursos publicos y libres que se utilizaron
 
-universal-tutorial [REST API for countries, states and cities](https://www.universal-tutorial.com/rest-apis/free-rest-api-for-country-state-city)
+- [The Web Dev](https://thewebdev.info/mexican-states-array-and-select-element/)
+
+- [REST COUNTRIES 🇵🇪](https://restcountries.com/)

@@ -1,0 +1,18 @@
+    name,
+    lasName
+    num_register
+    alias,
+    date_birth,
+    height,
+    nationality,
+    country_birth,
+    place_birth,
+    gender,
+    tattoos,
+    date_arrest
+    reason_arrest,
+    description_arrest,
+    img_profile
+    imgages_arrest {se agregaran mas fotos}
+    docs {se agregaran mas fotos}
+    profile_ref <- referencia de doc firebase
