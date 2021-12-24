@@ -15,3 +15,5 @@ Estos son algunos de los recursos publicos y libres que se utilizaron
 - [The Web Dev](https://thewebdev.info/mexican-states-array-and-select-element/)
 
 - [REST COUNTRIES 🇵🇪](https://restcountries.com/)
+
+- [rfc-facil-js](https://github.com/josketres/rfc-facil-js)

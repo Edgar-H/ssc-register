@@ -104,6 +104,20 @@
       border-radius: $br-content;
     }
   }
+  .errors-message {
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    background-color: rgb(255, 0, 0, 0.2);
+    color: #9b4b4b;
+    border-radius: $br-content;
+    width: 70%;
+    min-width: 250px;
+    margin: 0 auto 8px;
+    // padding: 3px 0;
+    font-weight: 300;
+    font-size: 15px;
+    font-style: italic;
+  }
 }
 .btns-register {
   display: flex;

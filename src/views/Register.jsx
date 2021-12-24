@@ -6,6 +6,9 @@ import Modals from '../components/Modals';
 import axios from 'axios';
 import * as Yup from 'yup';
 import statesMx from '../assets/statesMx.json';
+import app from '../services/firebase/firebaseConfig';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import RfcaFacil from 'rfc-facil';
 
 const Register = () => {
   const [mexican, setMexican] = useState(true);
@@ -13,6 +16,9 @@ const Register = () => {
   let { registerId } = useParams();
   let navigate = useNavigate();
   const profile = getProfile(parseInt(registerId));
+
+  // Initialize firestore
+  const firestore = getFirestore(app);
 
   const verifyId = () => {
     if (!profile) {
@@ -42,49 +48,109 @@ const Register = () => {
       .max(50, 'Nombre muy largo')
       .matches(/^[a-zA-Z ]*$/, 'Nombre invalido')
       .trim()
-      .required('Required'),
-    lastName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
+      .required('Campo nombre vacio'),
+    firstLastName: Yup.string()
+      .min(2, 'Apellido muy corto')
+      .max(50, 'Apellido muy largo')
       .trim()
-      .required('Required'),
-    alias: Yup.string().min(2, 'Too Short!').trim().required('Required'),
-    date_birth: Yup.date().max(new Date(), 'Too Long!').required('Required'),
+      .required('Campo apellido vacio'),
+    secondLastName: Yup.string()
+      .matches(/^[a-zA-Z ]*$/, 'Nombre invalido')
+      .trim(),
+    alias: Yup.string()
+      .min(2, 'Alias muy corto')
+      .trim()
+      .required('Campo Alias vacio'),
+    date_birth: Yup.date()
+      .max(new Date(), 'Fecha no valida')
+      .required('Fecha de nacimiento vacia'),
     height: Yup.number()
-      .min(50, 'Too Short!')
-      .max(230, 'Too Short!')
-      .required('Required'),
-    reason_arrest: Yup.string().min(4, 'Too Short').trim().required('Required'),
+      .min(50, 'Estatura muy corta')
+      .max(230, 'Estatura muy alta')
+      .required('Campo estatura requerido'),
+    reason_arrest: Yup.string()
+      .min(4, 'Motivvo muy corto')
+      .trim()
+      .required('Motivo de detencion requerido'),
     date_arrest: Yup.date()
-      .min(new Date(1900, 1, 1), 'Too Short!')
-      .max(new Date(), 'Too Long!')
-      .required('Required'),
-    description_arrest: Yup.string().min(50, 'Too Short!').required('Required'),
+      .min(new Date(1900, 1, 1), 'Fecha de detencion no valida')
+      .max(new Date(), 'Fecha de detencion no puede ser mayor a la actual')
+      .required('fehca de detencion vacia'),
+    description_arrest: Yup.string()
+      .min(50, 'Descripcion de detencion muy corta')
+      .required('Descripcion de detencion requerida'),
   });
 
+  const getRfc = ({ name, firstLastName, secondLastName, date_birth }) => {
+    let datebirth = Date.parse(date_birth);
+    let fullDatebirth = new Date(datebirth);
+    const rfc = RfcaFacil.forNaturalPerson({
+      name: name,
+      firstLastName: firstLastName,
+      secondLastName: secondLastName,
+      day: fullDatebirth.getDay(),
+      month: fullDatebirth.getMonth(),
+      year: fullDatebirth.getUTCFullYear(),
+    });
+    return rfc;
+  };
+  const setProfile = async (values, rfc) => {
+    const profile = {
+      name: values.name,
+      firstLastName: values.firstLastName || null,
+      secondLastName: values.secondLastName || null,
+      alias: values.alias || null,
+      date_birth: values.date_birth || null,
+      height: values.height || null,
+      gender: values.gender || null,
+      tattoos: values.tattoos || null,
+      nationality: values.nationality || null,
+      country_birth: values.country_birth || null,
+      place_birth: values.place_birth || null,
+      date_arrest: values.date_arrest || null,
+      reason_arrest: values.reason_arrest || null,
+      description_arrest: values.description_arrest || null,
+      rfc: rfc,
+    };
+    try {
+      const profileRegistered = await setDoc(
+        doc(firestore, 'profilestest', `${rfc}`),
+        profile,
+        { merge: false }
+      );
+      console.log(profileRegistered);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className='form-register'>
       <p className='txt-headers'>Registro {registerId}</p>
       <Formik
         initialValues={{
           name: '',
-          lastName: '',
+          firstLastName: '',
+          secondLastName: '',
           alias: '',
           date_birth: '',
           height: '',
-          gender: '',
-          nationality: '',
+          gender: 'Hombre',
+          tattoos: 'no',
+          nationality: 'Mexicano',
           country_birth: '',
-          place_birth: '',
-          tattoos: '',
+          place_birth: 'Ciudad de Mexico',
           date_arrest: '',
           reason_arrest: '',
           description_arrest: '',
         }}
         validationSchema={SignupSchema}
-        onSubmit={(values) => {
+        onSubmit={(values, { resetForm }) => {
           // same shape as initial values
           console.log(values);
+
+          const rfc = getRfc(values);
+          setProfile(values, rfc);
+          // resetForm();
         }}
         validate={(values) => {
           if (values.nationality === 'Extranjero') {
@@ -97,6 +163,33 @@ const Register = () => {
       >
         {({ errors, touched }) => (
           <Form>
+            {touched.name && (
+              <div className='errors-message'>{errors.name}</div>
+            )}
+            {touched.firstLastName && (
+              <div className='errors-message'>{errors.firstLastName}</div>
+            )}
+            {touched.secondLastName && (
+              <div className='errors-message'>{errors.secondLastName}</div>
+            )}
+            {touched.alias && (
+              <div className='errors-message'>{errors.alias}</div>
+            )}
+            {touched.date_birth && (
+              <div className='errors-message'>{errors.date_birth}</div>
+            )}
+            {touched.height && (
+              <div className='errors-message'>{errors.height}</div>
+            )}
+            {touched.reason_arrest && (
+              <div className='errors-message'>{errors.reason_arrest}</div>
+            )}
+            {touched.date_arrest && (
+              <div className='errors-message'>{errors.date_arrest}</div>
+            )}
+            {touched.description_arrest && (
+              <div className='errors-message'>{errors.description_arrest}</div>
+            )}
             <div className='header-register'>
               <div className='img-profile-register'>
                 <div className='img-profile'>
@@ -117,18 +210,26 @@ const Register = () => {
                       id='name'
                       placeholder='Nombre(s)'
                     />
-                    {touched.name && <div>{errors.name}</div>}
                   </div>
-                  <div className='lastName col-s-100 col-m-40'>
-                    <label htmlFor='lastName'>Apellidos</label>
+                  <div className='firstLastName col-s-100 col-m-40'>
+                    <label htmlFor='firstLastName'>Apellido paterno</label>
                     <Field
                       type='text'
-                      name='lastName'
-                      id='lastName'
-                      placeholder='Apellidos'
+                      name='firstLastName'
+                      id='firstLastName'
+                      placeholder='Apellido paterno'
                     />
-                    {touched.lastName && <div>{errors.lastName}</div>}
                   </div>
+                  <div className='secondLastName col-s-100 col-m-40'>
+                    <label htmlFor='secondLastName'>Apellido materno</label>
+                    <Field
+                      type='text'
+                      name='secondLastName'
+                      id='secondLastName'
+                      placeholder='Apellidos '
+                    />
+                  </div>
+
                   <div className='alias col-s-100 col-m-20'>
                     <label htmlFor='alias'>alias</label>
                     <Field
@@ -137,19 +238,16 @@ const Register = () => {
                       id='alias'
                       placeholder='Alias N'
                     />
-                    {touched.alias && <div>{errors.alias}</div>}
                   </div>
                 </div>
                 <div className='row-register'>
                   <div className='birthday  col-s-100 col-m-35 col-l-25'>
                     <label htmlFor='birthday'>Fecha de nac.</label>
                     <Field type='date' name='date_birth' id='date_birth' />
-                    {touched.date_birth && <div>{errors.date_birth}</div>}
                   </div>
                   <div className='height col-s-100 col-m-25'>
                     <label htmlFor='height'>Estatura</label>
                     <Field type='number' name='height' id='height' />
-                    {touched.height && <div>{errors.height}</div>}
                   </div>
                   <div className='gender col-s-100 col-m-25'>
                     <label htmlFor='gender'>Sexo</label>
@@ -176,7 +274,12 @@ const Register = () => {
                   </div>
                   <div className='country_birth col-s-100'>
                     <label htmlFor='country_birth'>Pais de nacimiento</label>
-                    <Field as='select' name='country_birth' id='country_birth'>
+                    <Field
+                      as='select'
+                      name='country_birth'
+                      id='country_birth'
+                      disabled={mexican ? true : false}
+                    >
                       {mexican
                         ? ''
                         : countrys?.map((country) => (
@@ -188,7 +291,12 @@ const Register = () => {
                   </div>
                   <div className='place_birth col-s-100'>
                     <label htmlFor='place_birth'>Ent. Fed. Nacim.</label>
-                    <Field as='select' name='place_birth' id='place_birth'>
+                    <Field
+                      as='select'
+                      name='place_birth'
+                      id='place_birth'
+                      disabled={mexican ? false : true}
+                    >
                       {mexican
                         ? statesMx.map((state) => (
                             <option key={state.abbreviation} value={state.name}>
@@ -204,7 +312,6 @@ const Register = () => {
                   <div className='date_arrest col-s-100 col-m-35 col-l-25'>
                     <label htmlFor='date_arrest'>Fecha detencion</label>
                     <Field type='date' name='date_arrest' id='date_arrest' />
-                    {touched.date_arrest && <div>{errors.date_arrest}</div>}
                   </div>
                   <div className='reason_arrest col-s-100 col-m-75'>
                     <label htmlFor='reason_arrest'>Motivo de detencion</label>
@@ -213,7 +320,6 @@ const Register = () => {
                       name='reason_arrest'
                       id='reason_arrest'
                     />
-                    {touched.reason_arrest && <div>{errors.reason_arrest}</div>}
                   </div>
                 </div>
               </div>
@@ -228,9 +334,6 @@ const Register = () => {
                 as='textarea'
                 className='col-s-100'
               />
-              {touched.description_arrest && (
-                <div>{errors.description_arrest}</div>
-              )}
             </div>
             <div className='btns-register'>
               <button onClick={() => activeModal('Images')}>
@@ -242,11 +345,7 @@ const Register = () => {
               {modalView && (
                 <Modals view={modalViewActive} closeModal={setModalView} />
               )}
-              <button
-                type='submit'
-                // onClick={() => navigate('/', { replace: true })}
-                className='btn-submit'
-              >
+              <button type='submit' className='btn-submit'>
                 Registrar
               </button>
             </div>

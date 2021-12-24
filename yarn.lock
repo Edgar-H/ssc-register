@@ -10389,6 +10389,11 @@ rework@1.0.1:
     convert-source-map "^0.3.3"
     css "^2.0.0"
 
+rfc-facil@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/rfc-facil/-/rfc-facil-1.1.0.tgz#9de3415570b26b0a497e126ea67906273fca96d4"
+  integrity sha512-ImGh2qCMEn3kbuvv+YkH2oqwRDbGVi6t4rrycHUoIxIuFGxqap0GhGFE6oNrbtLzMOcSgcLPfPn7iq14XaBqQQ==
+
 rgb-regex@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/rgb-regex/-/rgb-regex-1.0.1.tgz#c0e0d6882df0e23be254a475e8edd41915feaeb1"
