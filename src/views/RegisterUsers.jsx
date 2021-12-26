@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import app from '../services/firebase/firebaseConfig';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
 import {
   getFirestore,
   doc,
@@ -36,7 +40,6 @@ const RegisterUsers = () => {
       const userscollection = collection(firestore, 'users');
       const userList = await getDocs(userscollection);
       setUserList(userList.docs.map((doc) => doc.data()));
-      console.log('se ejecuto getUsers');
     } catch (err) {
       console.log(err);
     }
@@ -78,6 +81,7 @@ const RegisterUsers = () => {
     if (password !== passwordConfirm) {
       return setError('Las contraseñas no coinciden');
     }
+
     try {
       const userRegistration = await createUserWithEmailAndPassword(
         auth,
@@ -86,6 +90,7 @@ const RegisterUsers = () => {
       ).then((userFirebase) => userFirebase);
       const docRef = await doc(firestore, `users/${userRegistration.user.uid}`);
       if (userRegistration.operationType === 'signIn') {
+        console.log(userRegistration);
         setDoc(docRef, {
           name,
           lastName,
@@ -96,9 +101,12 @@ const RegisterUsers = () => {
           status: 'active',
         });
         setSuccess('Usuario registrado correctamente');
-        setTimeout(() => {
-          setSuccess('');
-        }, 3000);
+        await sendEmailVerification(
+          auth,
+          userRegistration.user.auth.currentUser
+        )
+          .then(() => console.log('Email enviado'))
+          .catch((err) => console.log('Error al enviar el email', err));
       }
     } catch (err) {
       switch (err.code) {
@@ -112,32 +120,27 @@ const RegisterUsers = () => {
           break;
       }
     }
-    getUsers();
-    setDataUser('');
-    setError('');
   };
 
   const deleteUser = async (uid) => {
-    try {
-      const docRefDelete = await doc(firestore, `users/${uid}`);
-      await deleteDoc(docRefDelete);
-      getUsers();
-    } catch (err) {
-      console.log(err);
-    }
+    await doc(firestore, `users/${uid}`)
+      .then((user) => {
+        deleteDoc(user);
+        getUsers();
+      })
+      .catch((err) => console.log(err));
   };
 
   const editUser = async (dataUserUpdate) => {
     const { role, status } = dataUserUpdate;
-    try {
-      const docRefEdit = await doc(firestore, `users/${id}`);
-      await updateDoc(docRefEdit, { status, role });
-      setModeEdit(false);
-      setDataUser('');
-      getUsers();
-    } catch (err) {
-      console.log(err);
-    }
+    await doc(firestore, `users/${id}`)
+      .then((doc) => {
+        updateDoc(doc, { status, role });
+        setModeEdit(false);
+        setDataUser('');
+        getUsers();
+      })
+      .catch((err) => console.log(err));
   };
 
   const modeEditUser = async (userUid) => {

@@ -7,7 +7,17 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import statesMx from '../assets/statesMx.json';
 import app from '../services/firebase/firebaseConfig';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import {
+  doc,
+  getFirestore,
+  setDoc,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 import RfcaFacil from 'rfc-facil';
 
 const Register = () => {
@@ -82,20 +92,24 @@ const Register = () => {
   });
 
   const getRfc = ({ name, firstLastName, secondLastName, date_birth }) => {
-    let datebirth = Date.parse(date_birth);
-    let fullDatebirth = new Date(datebirth);
+    let fullDatebirth = new Date(date_birth).toISOString();
+    let day = fullDatebirth.substring(8, 10);
+    let month = fullDatebirth.substring(5, 7);
+    let year = fullDatebirth.substring(0, 4);
+
     const rfc = RfcaFacil.forNaturalPerson({
       name: name,
       firstLastName: firstLastName,
       secondLastName: secondLastName,
-      day: fullDatebirth.getDay(),
-      month: fullDatebirth.getMonth(),
-      year: fullDatebirth.getUTCFullYear(),
+      day: day,
+      month: month,
+      year: year,
     });
     return rfc;
   };
   const setProfile = async (values, rfc) => {
     const profile = {
+      fullName: `${values.name} ${values.firstLastName} ${values.secondLastName}`,
       name: values.name,
       firstLastName: values.firstLastName || null,
       secondLastName: values.secondLastName || null,
@@ -107,22 +121,58 @@ const Register = () => {
       nationality: values.nationality || null,
       country_birth: values.country_birth || null,
       place_birth: values.place_birth || null,
-      date_arrest: values.date_arrest || null,
-      reason_arrest: values.reason_arrest || null,
-      description_arrest: values.description_arrest || null,
       rfc: rfc,
+      history_arrest: [
+        {
+          reason_arrest: values.reason_arrest || null,
+          description_arrest: values.description_arrest || null,
+          date_arrest: values.date_arrest || null,
+        },
+      ],
+      timestamp: serverTimestamp(),
+    };
+
+    const profilesRef = query(
+      collection(firestore, 'profilestest'),
+      where('rfc', '==', rfc)
+    ); // Get a reference to the collection
+    const querySnapshots = await getDocs(profilesRef);
+    const [profileDuplicate] = querySnapshots.docs.map((doc) => doc.id);
+    if (profileDuplicate === rfc) {
+      console.log(profileDuplicate);
+      console.log('Ya existe un registro con ese rfc');
+      // activeModal('duplicate');
+    } else {
+      console.log('sin coincidencias');
+      await setDoc(doc(firestore, 'profilestest', `${rfc}`), profile);
+      console.log('Perfil guardado');
+    }
+  };
+
+  const newLine = async (values, rfc) => {
+    const updateArrest = {
+      height: values.height || null,
+      tattoos: values.tattoos || null,
+    };
+    const newArrest = {
+      history_arrest: [
+        {
+          reason_arrest: values.reason_arrest || null,
+          description_arrest: values.description_arrest || null,
+          date_arrest: values.date_arrest || null,
+        },
+      ],
     };
     try {
-      const profileRegistered = await setDoc(
-        doc(firestore, 'profilestest', `${rfc}`),
-        profile,
-        { merge: false }
-      );
-      console.log(profileRegistered);
+      const docRef = await doc(firestore, 'profilestest', `${rfc}`);
+      updateDoc(docRef, updateArrest);
+      setDoc(docRef, newArrest);
+      console.log('Perfil actualizado');
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <div className='form-register'>
       <p className='txt-headers'>Registro {registerId}</p>
@@ -145,9 +195,6 @@ const Register = () => {
         }}
         validationSchema={SignupSchema}
         onSubmit={(values, { resetForm }) => {
-          // same shape as initial values
-          console.log(values);
-
           const rfc = getRfc(values);
           setProfile(values, rfc);
           // resetForm();
@@ -163,33 +210,37 @@ const Register = () => {
       >
         {({ errors, touched }) => (
           <Form>
-            {touched.name && (
-              <div className='errors-message'>{errors.name}</div>
-            )}
-            {touched.firstLastName && (
-              <div className='errors-message'>{errors.firstLastName}</div>
-            )}
-            {touched.secondLastName && (
-              <div className='errors-message'>{errors.secondLastName}</div>
-            )}
-            {touched.alias && (
-              <div className='errors-message'>{errors.alias}</div>
-            )}
-            {touched.date_birth && (
-              <div className='errors-message'>{errors.date_birth}</div>
-            )}
-            {touched.height && (
-              <div className='errors-message'>{errors.height}</div>
-            )}
-            {touched.reason_arrest && (
-              <div className='errors-message'>{errors.reason_arrest}</div>
-            )}
-            {touched.date_arrest && (
-              <div className='errors-message'>{errors.date_arrest}</div>
-            )}
-            {touched.description_arrest && (
-              <div className='errors-message'>{errors.description_arrest}</div>
-            )}
+            <>
+              {touched.name && (
+                <div className='errors-message'>{errors.name}</div>
+              )}
+              {touched.firstLastName && (
+                <div className='errors-message'>{errors.firstLastName}</div>
+              )}
+              {touched.secondLastName && (
+                <div className='errors-message'>{errors.secondLastName}</div>
+              )}
+              {touched.alias && (
+                <div className='errors-message'>{errors.alias}</div>
+              )}
+              {touched.date_birth && (
+                <div className='errors-message'>{errors.date_birth}</div>
+              )}
+              {touched.height && (
+                <div className='errors-message'>{errors.height}</div>
+              )}
+              {touched.reason_arrest && (
+                <div className='errors-message'>{errors.reason_arrest}</div>
+              )}
+              {touched.date_arrest && (
+                <div className='errors-message'>{errors.date_arrest}</div>
+              )}
+              {touched.description_arrest && (
+                <div className='errors-message'>
+                  {errors.description_arrest}
+                </div>
+              )}
+            </>
             <div className='header-register'>
               <div className='img-profile-register'>
                 <div className='img-profile'>
