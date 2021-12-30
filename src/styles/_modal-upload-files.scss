@@ -1,0 +1,26 @@
+@import './variable';
+
+.upload-images {
+  background-color: $primary-50;
+  border: 2px dotted $primary-300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  i {
+    font-size: 68px;
+    color: $primary-300;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: '\f302';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      font-size: 34px;
+      color: $primary-50;
+      left: 22px;
+      bottom: 12px;
+    }
+  }
+}

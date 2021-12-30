@@ -17,15 +17,30 @@ import {
   where,
   getDocs,
   updateDoc,
+  getDoc,
 } from 'firebase/firestore';
 import RfcaFacil from 'rfc-facil';
+import uniqid from 'uniqid';
+import { uploadImgProfile } from '../services/cloudinary/uploadImgProfile';
 
 const Register = () => {
+  // cada registro debera tener el numero de empleado que lo creo
+  let uniqId = uniqid();
   const [mexican, setMexican] = useState(true);
   const [countrys, setCountrys] = useState([]);
+  const [imgProfile, setImgProfile] = useState(
+      'https://images.unsplash.com/photo-1639100618065-358723b7961d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80'
+    ),
+    [loading, setLoading] = useState(false);
   let { registerId } = useParams();
   let navigate = useNavigate();
   const profile = getProfile(parseInt(registerId));
+  const [modalView, setModalView] = useState(false),
+    [modalViewActive, setModalViewActive] = useState('');
+  const activeModal = (modalView) => {
+    setModalView(true);
+    setModalViewActive(modalView);
+  };
 
   // Initialize firestore
   const firestore = getFirestore(app);
@@ -43,13 +58,6 @@ const Register = () => {
     const { data } = await axios.get('https://restcountries.com/v3.1/all');
     const listContrys = data.map((country) => country.name.common);
     setCountrys(listContrys.sort());
-  };
-
-  const [modalView, setModalView] = useState(false),
-    [modalViewActive, setModalViewActive] = useState('');
-  const activeModal = (modalView) => {
-    setModalView(true);
-    setModalViewActive(modalView);
   };
 
   const SignupSchema = Yup.object().shape({
@@ -88,6 +96,7 @@ const Register = () => {
       .required('fehca de detencion vacia'),
     description_arrest: Yup.string()
       .min(50, 'Descripcion de detencion muy corta')
+      .trim()
       .required('Descripcion de detencion requerida'),
   });
 
@@ -109,6 +118,7 @@ const Register = () => {
   };
   const setProfile = async (values, rfc) => {
     const profile = {
+      img_profile: imgProfile,
       fullName: `${values.name} ${values.firstLastName} ${values.secondLastName}`,
       name: values.name,
       firstLastName: values.firstLastName || null,
@@ -150,24 +160,37 @@ const Register = () => {
   };
 
   const newLine = async (values, rfc) => {
-    const updateArrest = {
+    /* const updateArrest = {
       height: values.height || null,
       tattoos: values.tattoos || null,
-    };
-    const newArrest = {
-      history_arrest: [
-        {
-          reason_arrest: values.reason_arrest || null,
-          description_arrest: values.description_arrest || null,
-          date_arrest: values.date_arrest || null,
-        },
-      ],
-    };
+    }; */
+    const history_arrest = [
+      {
+        id: uniqId,
+        reason_arrest: values.reason_arrest || null,
+        description_arrest: values.description_arrest || null,
+        date_arrest: values.date_arrest || null,
+      },
+    ];
     try {
-      const docRef = await doc(firestore, 'profilestest', `${rfc}`);
-      updateDoc(docRef, updateArrest);
-      setDoc(docRef, newArrest);
-      console.log('Perfil actualizado');
+      // creamos referencia al documento
+      const docRef = doc(firestore, `profilestest/${rfc}`);
+      // buscamos el documento
+      const docSnapshot = await getDoc(docRef);
+      //  revisamos si existe el documento
+      if (docSnapshot.exists()) {
+        //  Agregamos el nuevo arresto al historial
+        await updateDoc(docRef, {
+          history_arrest: [
+            ...docSnapshot.data().history_arrest,
+            ...history_arrest,
+          ],
+        });
+        console.log('Perfil actualizado');
+      } else {
+        // si no existe creamos el documento
+        console.log('No existe el documento');
+      }
     } catch (err) {
       console.log(err);
     }
@@ -197,6 +220,7 @@ const Register = () => {
         onSubmit={(values, { resetForm }) => {
           const rfc = getRfc(values);
           setProfile(values, rfc);
+          // newLine(values, rfc);
           // resetForm();
         }}
         validate={(values) => {
@@ -244,12 +268,32 @@ const Register = () => {
             <div className='header-register'>
               <div className='img-profile-register'>
                 <div className='img-profile'>
-                  <img
-                    src='https://images.unsplash.com/photo-1639100618065-358723b7961d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80'
-                    alt=''
+                  <img src={imgProfile} alt='profile' />
+                </div>
+                <div className='btn-img-profile'>
+                  <label
+                    htmlFor='imgProfile'
+                    className={loading ? 'loading' : 'img-profile'}
+                  >
+                    {loading ? 'Subiendo...' : 'Subir foto'}
+                  </label>
+                  <input
+                    type='file'
+                    name='imgProfile'
+                    id='ImgProfile'
+                    onChange={(e) => {
+                      setLoading(true);
+                      uploadImgProfile(e.target.files[0])
+                        .then((res) => {
+                          setImgProfile(res);
+                          setLoading(false);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
                   />
                 </div>
-                <button>Cargar foto</button>
               </div>
               <div className='basic-profile'>
                 <div className='row-register'>
@@ -387,10 +431,10 @@ const Register = () => {
               />
             </div>
             <div className='btns-register'>
-              <button onClick={() => activeModal('Images')}>
+              <button type='button' onClick={() => activeModal('Images')}>
                 Cargar fotos
               </button>
-              <button onClick={() => activeModal('Documentos')}>
+              <button type='button' onClick={() => activeModal('Documentos')}>
                 Cargar Documentos
               </button>
               {modalView && (

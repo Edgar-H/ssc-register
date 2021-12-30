@@ -18,21 +18,41 @@
       margin: 0 auto;
       div {
         max-height: 224px;
-        border-radius: $br-content;
         overflow: hidden;
         @include df-center;
         img {
+          border-radius: $br-content;
           width: 100%;
           min-width: 170px;
         }
       }
-      > button {
+      .btn-img-profile {
         width: 100%;
-        background-color: $bg-btn-open;
-        @include btn-all;
-        height: 38px;
-        font-size: 16px;
-        margin-top: 10px;
+        position: relative;
+        label {
+          display: block;
+          padding: 11px 0;
+          width: 100%;
+          text-align: center;
+          border-radius: $br-btn;
+          font-size: 16px;
+          font-weight: 500;
+          background-color: $bg-btn-open;
+          color: $primary-50;
+          margin-top: 10px;
+        }
+        .loading {
+          background-color: rgb(170, 189, 230);
+          transition: all 0.3s ease-in-out;
+          color: $primary-50;
+        }
+        input {
+          cursor: pointer;
+          position: absolute;
+          z-index: 1;
+          height: 100%;
+          opacity: 0;
+        }
       }
     }
     .basic-profile {
