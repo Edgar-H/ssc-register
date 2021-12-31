@@ -1,8 +1,6 @@
-const Modal = ({ children, modalView, closeButton }) => {
+const Modal = ({ children, modalView, closeButton, handleUpload }) => {
   const handleModalContainerClick = (e) => e.stopPropagation();
-  // const fileHandle = (e) => {
-  //   console.log('ALGO');
-  // };
+
   return (
     <div className='modal' onClick={() => closeButton(false)}>
       <div className='modal-container' onClick={handleModalContainerClick}>
@@ -10,9 +8,15 @@ const Modal = ({ children, modalView, closeButton }) => {
         <h3>{modalView} cargadas</h3>
         <div className='modal-view'>{children}</div>
         <div className='btn-modal'>
-          {/* <input type='file' value='algo' onChange={fileHandle} /> */}
-          <button className='col-s-100 col-m-25'>
+          <button className='col-s-100 col-m-25' type='button'>
             <i className='fas fa-plus'></i> {modalView}
+          </button>
+          <button
+            onClick={handleUpload}
+            className='col-s-100 col-m-35'
+            type='button'
+          >
+            Cargar {modalView}
           </button>
         </div>
       </div>

@@ -1,22 +1,101 @@
 import Modal from './Modal';
+import { useDropzone } from 'react-dropzone';
 import '../styles/_modal-upload-files.scss';
+import { useCallback, useState } from 'react';
+import { uploadImgProfile } from '../services/cloudinary/uploadImgProfile';
 
 const Modals = ({ view, closeModal }) => {
-  const numImages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [images, setImages] = useState([]);
+  const [imagesListener, setImagesListener] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles, rejectFiles) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const binaryStr = reader.result;
+        setImages((prevImages) => [...prevImages, binaryStr]);
+      };
+      reader.readAsDataURL(file);
+    });
+    console.log(rejectFiles);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: 'image/*',
+  });
+
+  const handleUpload = (e) => {
+    console.log('handleUpload');
+    e.preventDefault();
+    setLoading(true);
+    const promises = images.map((img) => uploadImgProfile(img));
+    Promise.all(promises)
+      .then((urls) => {
+        console.log('urls', urls);
+        setImagesListener(urls);
+        setLoading(false);
+      })
+      .catch((err) => console.log('err', err));
+  };
+
+  const deleteImage = (i) => {
+    setImages((prevImages) => prevImages.filter((img, index) => index !== i));
+  };
+  console.log(view);
 
   return (
-    <Modal modalView={view} closeButton={closeModal}>
+    <Modal
+      modalView={view}
+      closeButton={closeModal}
+      handleUpload={(e) => handleUpload(e)}
+    >
+      {loading && (
+        <div className='is-loading'>
+          {loading && (
+            <>
+              Subiendo... <i className='fas fa-spinner fa-spin'></i>
+            </>
+          )}
+        </div>
+      )}
       {view === 'Images' ? (
         <div className='modal-images'>
-          <div className='upload-images'>
-            <i className='fas fa-cloud'></i>
+          <div
+            className={
+              images.length === 0 ? 'upload-images upload' : 'upload-images'
+            }
+            {...getRootProps()}
+          >
+            <input {...getInputProps()} />
+            <div>
+              <i className='fas fa-cloud-upload-alt'></i>
+              {isDragActive ? (
+                <p>Listo sueltalos... :D</p>
+              ) : (
+                <>
+                  <p>Arrastra las imágenes aquí</p>
+                  <p>o usa el buton "+ Imagenes"</p>
+                </>
+              )}
+            </div>
           </div>
-          {numImages.map((img) => (
+          {images?.map((image, index) => (
+            <div key={index} className='image-container'>
+              <img src={image} alt='imagen' />
+              <i
+                className='far fa-trash-alt'
+                onClick={() => deleteImage(index)}
+              ></i>
+            </div>
+          ))}
+          {imagesListener?.map((img) => (
             <div
               className='item-image'
               style={{
                 backgroundImage:
-                  'url(https://images.unsplash.com/photo-1628375385881-1cc69cee648a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=764&q=80)',
+                  imagesListener.length === 0 ? 'none' : `url(${img})`,
               }}
               key={img}
             ></div>
@@ -30,7 +109,7 @@ const Modals = ({ view, closeModal }) => {
             <p>Usuario</p>
           </div>
           <div className='file-content'>
-            {numImages.map((img) => (
+            {imagesListener?.map((img) => (
               <div className='item-file' key={img}>
                 <div className='file-name'>
                   <i className='far fa-copy'></i>{' '}
