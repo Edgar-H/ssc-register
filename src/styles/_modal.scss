@@ -44,13 +44,8 @@
 
     button {
       @include btn-all;
-      background-color: $bg-btn-open;
-      min-width: 180px;
-      ~ button {
-        min-width: 220px;
-        margin-left: 10px;
-        background-color: $bg-btn-submit;
-      }
+      min-width: 220px;
+      background-color: $bg-btn-submit;
     }
   }
 }

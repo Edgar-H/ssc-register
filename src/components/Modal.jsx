@@ -8,9 +8,6 @@ const Modal = ({ children, modalView, closeButton, handleUpload }) => {
         <h3>{modalView} cargadas</h3>
         <div className='modal-view'>{children}</div>
         <div className='btn-modal'>
-          <button className='col-s-100 col-m-25' type='button'>
-            <i className='fas fa-plus'></i> {modalView}
-          </button>
           <button
             onClick={handleUpload}
             className='col-s-100 col-m-35'
