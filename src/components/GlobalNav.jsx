@@ -1,17 +1,17 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-import useAuth from '../auth/useAuth';
-import app from '../services/firebase/firebaseConfig';
-import { getAuth, signOut } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { startLogout } from '../redux/actions/auth';
 
 const GlobalNav = () => {
-  const auth = getAuth(app);
-  const { logout, userAuth } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { uid } = useSelector((state) => state.auth);
 
   const logoutUser = () => {
-    logout();
-    signOut(auth);
+    dispatch(startLogout());
+    navigate('/login');
   };
 
   return (
@@ -41,7 +41,7 @@ const GlobalNav = () => {
           <li>
             <NavLink to='/verify'>Registrar</NavLink>
           </li>
-          {userAuth.role === 'admin' && (
+          {uid.role === 'admin' && (
             <li>
               <NavLink to='/registerusers'>Usuarios</NavLink>
             </li>

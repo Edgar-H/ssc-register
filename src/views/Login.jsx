@@ -1,83 +1,48 @@
-import React, { useState } from 'react';
+import React from 'react';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
-import useAuth from '../auth/useAuth';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import app from '../services/firebase/firebaseConfig';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { useForm } from '../hooks/useForm';
+import { startLoginEmailPassword } from '../redux/actions/auth';
+import { setError, removeError } from '../redux/actions/ui';
 
 const Login = () => {
-  const user = useAuth();
-  const auth = getAuth(app);
-  const firestore = getFirestore(app);
+  const dispatch = useDispatch();
+  const { msgError, msgSuccess, isLoading } = useSelector((state) => state.ui);
+  const { isLogged } = useSelector((state) => state.auth);
 
-  const [error, setError] = useState(),
-    [success, setSuccess] = useState();
+  const [formValue, handleInputChange] = useForm({});
 
-  const { register, handleSubmit } = useForm();
+  const { email, password } = formValue;
 
-  const onSubmit = async (loginData) => {
-    const { email, password } = loginData;
-    setError('');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      console.log('Form is valid');
+      dispatch(startLoginEmailPassword(email, password));
+    }
+  };
 
+  const isFormValid = () => {
     if (!email || !password) {
-      return setError('Por favor ingresa correo y contraseña');
+      dispatch(setError('Todos los campos son obligatorios'));
+      return false;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      dispatch(setError('Correo electrónico inválido'));
+      return false;
     }
 
-    const getDataUser = async (uid) => {
-      const docRef = doc(firestore, `users/${uid}`);
-      const getUser = await getDoc(docRef);
-      return getUser.data();
-    };
-
-    await signInWithEmailAndPassword(auth, email, password)
-      .then((userFirebase) => {
-        getDataUser(userFirebase.user.uid).then((userAuth) => {
-          if (userAuth) {
-            switch (userAuth.status) {
-              case 'active':
-                const loginData = {
-                  name: userAuth.name,
-                  employeeNumber: userAuth.employeeNumber,
-                  email: userAuth.email,
-                  role: userAuth.role,
-                };
-                user.login(loginData);
-                setError('');
-                setSuccess('Acceso correcto');
-                break;
-              case 'inactive':
-                setError('Usuario temporalmente suspendido');
-                break;
-              case 'holidays':
-                setError('El usuario no trabaja en este momento');
-                break;
-              default:
-                break;
-            }
-          } else {
-            setError('La cuenta ya fue dado de baja');
-            signOut(auth);
-          }
-        });
-      })
-      .catch((err) => {
-        setSuccess('');
-        switch (err.code) {
-          case 'auth/invalid-email':
-            return setError('El correo no es válido');
-          case 'auth/user-not-found':
-            return setError('El usuario no existe');
-          case 'auth/wrong-password':
-            return setError('La contraseña es incorrecta');
-          default:
-            break;
-        }
-      });
+    if (password.length < 6) {
+      dispatch(setError('La contraseña es de al menos 6 caracteres'));
+      return false;
+    }
+    dispatch(removeError());
+    return true;
   };
-  return user.userAuth ? (
+
+  return isLogged ? (
     <Navigate to='/' />
   ) : (
     <div className='login-container'>
@@ -87,27 +52,37 @@ const Login = () => {
             <img src={cdmx} alt='' />
             <img src={police} alt='' />
           </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleLogin}>
             <div className='message'>
-              {error && <p className='error-message message'>{error}</p>}
-              {success && <p className='success-message message'>{success}</p>}
+              {msgError && <p className='error-message message'>{msgError}</p>}
+              {msgSuccess && (
+                <p className='success-message message'>{msgSuccess}</p>
+              )}
             </div>
             <label htmlFor='email'>Correo electrónico</label>
             <input
               style={{ textTransform: 'lowercase' }}
-              type='email'
               id='email'
+              name='email'
               placeholder='example@example.com'
-              {...register('email')}
+              value={email}
+              onChange={handleInputChange}
             />
             <label htmlFor='password'>Contraseña</label>
             <input
               type='password'
               id='password'
+              name='password'
               placeholder='Contraseña'
-              {...register('password')}
+              value={password}
+              onChange={handleInputChange}
             />
-            <button onClick={handleSubmit(onSubmit)}>Ingresar</button>
+            <button
+              disabled={isLoading}
+              className={isLoading ? 'disabled' : ''}
+            >
+              {isLoading ? <i className='fas fa-spinner'></i> : 'Ingresar'}
+            </button>
           </form>
         </div>
         <div className='unsplash'>

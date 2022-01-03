@@ -52,6 +52,22 @@
       background-color: $bg-btn-submit;
       margin-top: 8px;
       @include btn-all;
+      i {
+        font-size: 24px;
+        animation: spin 2s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 

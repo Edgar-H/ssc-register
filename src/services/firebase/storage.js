@@ -5,7 +5,7 @@ import {
   uploadBytes,
   getMetadata,
 } from 'firebase/storage';
-import app from './firebaseConfig';
+import { app } from './firebaseConfig';
 
 const storage = getStorage(app);
 

@@ -17,3 +17,5 @@ Con la iniciativa de @Anonimo para mejorar la gestion y control de los detenidos
 - [rfc-facil-js](https://github.com/josketres/rfc-facil-js)
 
 - [react-dropzone](https://react-dropzone.js.org/)
+
+- [sweetalert2](https://sweetalert2.github.io/)

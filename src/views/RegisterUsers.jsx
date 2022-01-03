@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import app from '../services/firebase/firebaseConfig';
+import { app } from '../services/firebase/firebaseConfig';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -97,7 +97,7 @@ const RegisterUsers = () => {
           employeeNumber,
           email,
           role,
-          userUid: `${userRegistration.user.uid}`,
+          uid: `${userRegistration.user.uid}`,
           status: 'active',
         });
         setSuccess('Usuario registrado correctamente');
@@ -318,7 +318,7 @@ const RegisterUsers = () => {
               <div className='btns-actions'>
                 <i
                   className='fas fa-user-times'
-                  onClick={() => deleteUser(_user.userUid)}
+                  onClick={() => deleteUser(_user.uid)}
                 ></i>
                 <i
                   className='fas fa-user-edit'

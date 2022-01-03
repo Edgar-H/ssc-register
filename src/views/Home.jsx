@@ -1,12 +1,12 @@
 import { Link, Outlet } from 'react-router-dom';
-import useAuth from '../auth/useAuth';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
-  const { userAuth } = useAuth();
+  const { uid } = useSelector((state) => state.auth);
   return (
     <>
       <div className='home'>
-        <h5>Hola {userAuth.name}</h5>
+        <h5>Hola {uid.name}</h5>
         <div className='card-containter'>
           <div className='card'>
             <div className='info'>

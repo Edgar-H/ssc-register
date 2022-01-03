@@ -6,7 +6,7 @@ import Modals from '../components/Modals';
 import axios from 'axios';
 import * as Yup from 'yup';
 import statesMx from '../assets/statesMx.json';
-import app from '../services/firebase/firebaseConfig';
+import { app } from '../services/firebase/firebaseConfig';
 import {
   doc,
   getFirestore,
