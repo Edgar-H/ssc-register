@@ -31,7 +31,6 @@ export const startLoginEmailPassword =
                   role: userAuth.role,
                   status: userAuth.status,
                 };
-                console.log(loginData);
                 dispatch(login(loginData));
                 dispatch(removeError());
                 dispatch(setSuccess('Acceso correcto, Bienvenido'));
@@ -63,11 +62,16 @@ export const startLoginEmailPassword =
         switch (err.code) {
           case 'auth/invalid-email':
             dispatch(finishLoading());
-            return dispatch(setError('Correo electrónico inválido'));
+            dispatch(setError('Correo electrónico inválido'));
+            break;
           case 'auth/user-not-found':
-            return dispatch(setError('Usuario no encontrado'));
+            dispatch(finishLoading());
+            dispatch(setError('Usuario no encontrado'));
+            break;
           case 'auth/wrong-password':
-            return dispatch(setError('Contraseña incorrecta'));
+            dispatch(finishLoading());
+            dispatch(setError('Contraseña incorrecta'));
+            break;
           default:
             break;
         }

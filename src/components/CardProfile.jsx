@@ -1,5 +1,5 @@
 import { Link, Outlet } from 'react-router-dom';
-import { getProfiles } from '../services/firebase/profiles';
+import { getProfiles } from '../assets/profiles';
 
 const CardProfile = () => {
   let profiles = getProfiles();

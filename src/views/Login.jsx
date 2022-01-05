@@ -1,30 +1,26 @@
-import React from 'react';
 import cdmx from '../assets/cdmx.png';
 import police from '../assets/logo-police.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { useForm } from '../hooks/useForm';
+import { useForm } from 'react-hook-form';
 import { startLoginEmailPassword } from '../redux/actions/auth';
 import { setError, removeError } from '../redux/actions/ui';
 
 const Login = () => {
   const dispatch = useDispatch();
+
   const { msgError, msgSuccess, isLoading } = useSelector((state) => state.ui);
   const { isLogged } = useSelector((state) => state.auth);
 
-  const [formValue, handleInputChange] = useForm({});
+  const { register, handleSubmit } = useForm();
 
-  const { email, password } = formValue;
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (isFormValid()) {
-      console.log('Form is valid');
+  const handleLogin = ({ email, password }) => {
+    if (isFormValid(email, password)) {
       dispatch(startLoginEmailPassword(email, password));
     }
   };
 
-  const isFormValid = () => {
+  const isFormValid = (email, password) => {
     if (!email || !password) {
       dispatch(setError('Todos los campos son obligatorios'));
       return false;
@@ -33,7 +29,6 @@ const Login = () => {
       dispatch(setError('Correo electrónico inválido'));
       return false;
     }
-
     if (password.length < 6) {
       dispatch(setError('La contraseña es de al menos 6 caracteres'));
       return false;
@@ -52,7 +47,7 @@ const Login = () => {
             <img src={cdmx} alt='' />
             <img src={police} alt='' />
           </div>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit(handleLogin)}>
             <div className='message'>
               {msgError && <p className='error-message message'>{msgError}</p>}
               {msgSuccess && (
@@ -63,19 +58,15 @@ const Login = () => {
             <input
               style={{ textTransform: 'lowercase' }}
               id='email'
-              name='email'
               placeholder='example@example.com'
-              value={email}
-              onChange={handleInputChange}
+              {...register('email')}
             />
             <label htmlFor='password'>Contraseña</label>
             <input
               type='password'
               id='password'
-              name='password'
               placeholder='Contraseña'
-              value={password}
-              onChange={handleInputChange}
+              {...register('password')}
             />
             <button
               disabled={isLoading}

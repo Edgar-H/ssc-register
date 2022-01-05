@@ -1,24 +1,25 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { auth } from '../services/firebase/firebaseConfig';
+import { getDataUser } from '../services/firebase/getUser';
+import { useDispatch } from 'react-redux';
+import { signOut } from 'firebase/auth';
+import GlobalNav from '../components/GlobalNav';
 import NotFoundPage from '../views/NotFoundPage';
 import Login from '../views/Login';
 import Home from '../views/Home';
-import Verify from '../views/Verify';
 import Search from '../views/Search';
 import Tasks from '../views/Tasks';
-import Register from '../views/Register';
-import GlobalNav from '../components/GlobalNav';
+import Verify from '../views/Verify';
+import RegisterProfiles from '../views/RegisterProfiles';
 import PrivateRoutes from './PrivateRoutes';
 import RegisterUsers from '../views/RegisterUsers';
-import { auth } from '../services/firebase/firebaseConfig';
-import { getDataUser } from '../services/firebase/getUser';
-import { signOut } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
 import { login } from '../redux/actions/auth';
 import AdminRoute from './AdminRoute';
 
 const Router = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user?.uid) {
@@ -41,6 +42,7 @@ const Router = () => {
       }
     });
   }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -54,8 +56,8 @@ const Router = () => {
               <Route path='registerusers' element={<RegisterUsers />} />
             </Route>
             <Route path='verify' element={<Verify />} />
-            <Route path='register' element={<Register />}>
-              <Route path=':registerId' element={<Register />} />
+            <Route path='register' element={<RegisterProfiles />}>
+              <Route path=':rfcProfile' element={<RegisterProfiles />} />
             </Route>
           </Route>
         </Route>

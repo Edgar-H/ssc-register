@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 .notfound {
   text-align: center;
@@ -23,5 +24,16 @@
   }
   p {
     font-size: 16px;
+  }
+}
+
+.link-btn {
+  margin-top: 28px;
+  text-align: center;
+  a {
+    text-decoration: none;
+    @include btn-all;
+    background-color: $bg-btn-submit;
+    padding: 8px 18px;
   }
 }
