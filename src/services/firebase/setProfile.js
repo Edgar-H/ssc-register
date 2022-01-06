@@ -7,6 +7,7 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
+import { dbProfiles } from '../../assets/settings';
 import { firestore } from './firebaseConfig';
 
 export const setProfile = async (values, rfc, imgProfile) => {
@@ -36,7 +37,7 @@ export const setProfile = async (values, rfc, imgProfile) => {
   };
 
   const profilesRef = query(
-    collection(firestore, 'profilestest'),
+    collection(firestore, dbProfiles),
     where('rfc', '==', rfc)
   );
   const querySnapshots = await getDocs(profilesRef);
@@ -47,7 +48,7 @@ export const setProfile = async (values, rfc, imgProfile) => {
     // activeModal('duplicate');
   } else {
     console.log('sin coincidencias');
-    await setDoc(doc(firestore, 'profilestest', `${rfc}`), profile);
+    await setDoc(doc(firestore, dbProfiles, `${rfc}`), profile);
     console.log('Perfil guardado');
   }
 };
