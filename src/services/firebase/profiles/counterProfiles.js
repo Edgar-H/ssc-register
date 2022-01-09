@@ -1,6 +1,6 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { dbCounter } from '../settings';
-import { firestore } from './firebaseConfig';
+import { dbCounter } from '../../settings';
+import { firestore } from '../firebaseConfig';
 
 export const counterProfiles = async () => {
   const countRef = doc(firestore, `counter/${dbCounter}`);

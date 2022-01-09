@@ -1,66 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { app } from '../services/firebase/firebaseConfig';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from 'firebase/auth';
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  collection,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { getUsers } from '../services/firebase/users/getUsers';
+import { createUser } from '../services/firebase/users/createUser';
+import { updatedUser } from '../services/firebase/users/updateUser';
+import { deleteUser } from '../services/firebase/users/deletUser';
 
 const RegisterUsers = () => {
-  const auth = getAuth(app);
-  const firestore = getFirestore(app);
-
   const [error, setError] = useState(''),
     [success, setSuccess] = useState(''),
-    [nameUser, setNameUser] = useState(''),
-    [numberId, setNumberId] = useState(''),
     [userList, setUserList] = useState(),
-    [viewForm, setViewForm] = useState(false),
     [modeEdit, setModeEdit] = useState(false),
     [id, setId] = useState(''),
     [dataUser, setDataUser] = useState('');
 
   useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getUsers().then((users) => {
+      setUserList(users);
+    });
   }, []);
 
-  const getUsers = async () => {
-    try {
-      const userscollection = collection(firestore, 'users');
-      const userList = await getDocs(userscollection);
-      setUserList(userList.docs.map((doc) => doc.data()));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const view = () => {
-    setError('');
-    setSuccess('');
-    viewForm ? setViewForm(false) : setViewForm(true);
-  };
-
   const { register, handleSubmit } = useForm();
-
-  const filterUser = (e) => {
-    e.preventDefault();
-    if (!nameUser || !numberId) {
-      setError('Por favor ingresa datos para filtrar');
-    }
-    if (nameUser) {
-    }
-  };
 
   const onSubmit = async (loginData) => {
     const {
@@ -75,67 +34,45 @@ const RegisterUsers = () => {
     setError('');
     setSuccess('');
 
-    if (!role || !email || !password || !passwordConfirm) {
+    if (
+      !role ||
+      !email ||
+      !password ||
+      !passwordConfirm ||
+      !name ||
+      !lastName ||
+      !employeeNumber
+    ) {
       return setError('Por favor llena todos los campos');
     }
     if (password !== passwordConfirm) {
       return setError('Las contraseñas no coinciden');
     }
-
-    try {
-      const userRegistration = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      ).then((userFirebase) => userFirebase);
-      const docRef = await doc(firestore, `users/${userRegistration.user.uid}`);
-      if (userRegistration.operationType === 'signIn') {
-        console.log(userRegistration);
-        setDoc(docRef, {
-          name,
-          lastName,
-          employeeNumber,
-          email,
-          role,
-          uid: `${userRegistration.user.uid}`,
-          status: 'active',
-        });
-        setSuccess('Usuario registrado correctamente');
-        await sendEmailVerification(
-          auth,
-          userRegistration.user.auth.currentUser
-        )
-          .then(() => console.log('Email enviado'))
-          .catch((err) => console.log('Error al enviar el email', err));
-      }
-    } catch (err) {
-      switch (err.code) {
-        case 'auth/email-already-in-use':
-          return setError('El correo ya está en uso o fue utilizado');
-        case 'auth/invalid-email':
-          return setError('El correo no es válido');
-        case 'auth/weak-password':
-          return setError('La contraseña es muy débil');
-        default:
-          break;
-      }
-    }
-  };
-
-  const deleteUser = async (uid) => {
-    await doc(firestore, `users/${uid}`)
+    createUser(loginData, id)
       .then((user) => {
-        deleteDoc(user);
-        getUsers();
+        if (user) {
+          setSuccess('Usuario creado');
+          setUserList(getUsers());
+          setTimeout(() => {
+            setSuccess('');
+          }, 3000);
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setError(err);
+        setTimeout(() => {
+          setError('');
+        }, 3000);
+      });
   };
 
   const editUser = async (dataUserUpdate) => {
-    const { role, status } = dataUserUpdate;
-    await doc(firestore, `users/${id}`)
-      .then((doc) => {
-        updateDoc(doc, { status, role });
+    updatedUser(dataUserUpdate)
+      .then((res) => {
+        setSuccess(res);
+        setTimeout(() => {
+          setSuccess('');
+        }, 3000);
         setModeEdit(false);
         setDataUser('');
         getUsers();
@@ -144,7 +81,6 @@ const RegisterUsers = () => {
   };
 
   const modeEditUser = async (userUid) => {
-    setViewForm(false);
     setModeEdit(true);
     setId(userUid);
     userList.forEach((usr) => usr.userUid === userUid && setDataUser(usr));
@@ -160,140 +96,99 @@ const RegisterUsers = () => {
       <h3 className='txt-headers'>Administrador de usuarios</h3>
       <div className='register-users-container'>
         <div className='forms-admin-users'>
-          <div className='form-control'>
-            <label htmlFor='view'>
-              <input type='checkbox' name='view' id='view' onChange={view} />
-              <span>
-                <i>Registrar</i>
-              </span>
-            </label>
-          </div>
-          {!viewForm ? (
-            <>
-              <form
-                className='form-register-users'
-                onSubmit={
-                  modeEdit ? handleSubmit(editUser) : handleSubmit(onSubmit)
-                }
-              >
-                <h2>
-                  {modeEdit ? `Actualizar ${dataUser.name}` : 'Nuevo usuario'}
-                </h2>
-                <div className='message'>
-                  {error && <p className='error-message'>{error}</p>}
-                  {success && <p className='success-message'>{success}</p>}
-                </div>
-                {modeEdit ? (
-                  <>
-                    <label htmlFor='rol'>Rol del usuario</label>
-                    <select id='role' {...register('role')}>
-                      <option value='author'>Editor</option>
-                      <option value='reader'>Lector</option>
-                      <option value='admin'>Administrador</option>
-                    </select>
-                    <label htmlFor='status'>Rol del usuario</label>
-                    <select id='status' {...register('status')}>
-                      <option value='active'>Activo</option>
-                      <option value='inactive'>Suspendido</option>
-                      <option value='holidays'>Descansando</option>
-                    </select>
-                  </>
-                ) : (
-                  <>
-                    <label htmlFor='rol'>Rol del usuario</label>
-                    <select id='role' {...register('role')}>
-                      <option value='author'>Editor</option>
-                      <option value='reader'>Lector</option>
-                      <option value='admin'>Administrador</option>
-                    </select>
-                    <label htmlFor='name'>Nombre</label>
-                    <input
-                      type='text'
-                      id='name'
-                      placeholder='Nombre'
-                      {...register('name')}
-                    />
-                    <label htmlFor='lastName'>Apellido</label>
-                    <input
-                      type='text'
-                      id='lastName'
-                      placeholder='Apellido'
-                      {...register('lastName')}
-                    />
-                    <label htmlFor='employeeNumber'>Numero de empleado</label>
-                    <input
-                      type='text'
-                      id='employeeNumber'
-                      placeholder='123456789'
-                      {...register('employeeNumber')}
-                    />
-                    <label htmlFor='email'>Correo electrónico</label>
-                    <input
-                      style={{ textTransform: 'lowercase' }}
-                      type='email'
-                      id='email'
-                      placeholder='example@example.com'
-                      {...register('email')}
-                    />
-                    <label htmlFor='password'>Contraseña</label>
-                    <input
-                      type='password'
-                      id='password'
-                      placeholder='Contraseña'
-                      {...register('password')}
-                    />
-                    <label htmlFor='passwordConfirm'>
-                      Confirmar contraseña
-                    </label>
-                    <input
-                      type='password'
-                      id='passwordConfirm'
-                      placeholder='Confirmar contraseña'
-                      {...register('passwordConfirm')}
-                    />
-                  </>
-                )}
-
-                {modeEdit ? (
-                  <>
-                    <button type='submit'>Actualizar</button>
-                    <button onClick={exitModeEditUser} className='btn-cancel'>
-                      Cancelar
-                    </button>
-                  </>
-                ) : (
-                  <button onClick={handleSubmit(onSubmit)}>Registrar</button>
-                )}
-              </form>
-            </>
-          ) : (
-            <>
-              <form className='form-filter-users'>
-                <h2>Filtrar usuario</h2>
-                <div className='message'>
-                  {error && <p className='error-message'>{error}</p>}
-                  {success && <p className='success-message'>{success}</p>}
-                </div>
-                <label htmlFor='name-user'>Nombre</label>
+          <form
+            className='form-register-users'
+            onSubmit={
+              modeEdit ? handleSubmit(editUser) : handleSubmit(onSubmit)
+            }
+          >
+            <h2>
+              {modeEdit ? `Actualizar ${dataUser.name}` : 'Nuevo usuario'}
+            </h2>
+            <div className='message'>
+              {error && <p className='error-message'>{error}</p>}
+              {success && <p className='success-message'>{success}</p>}
+            </div>
+            {modeEdit ? (
+              <>
+                <label htmlFor='rol'>Rol del usuario</label>
+                <select id='role' {...register('role')}>
+                  <option value='author'>Editor</option>
+                  <option value='reader'>Lector</option>
+                  <option value='admin'>Administrador</option>
+                </select>
+                <label htmlFor='status'>Rol del usuario</label>
+                <select id='status' {...register('status')}>
+                  <option value='active'>Activo</option>
+                  <option value='inactive'>Suspendido</option>
+                  <option value='holidays'>Descansando</option>
+                </select>
+              </>
+            ) : (
+              <>
+                <label htmlFor='rol'>Rol del usuario</label>
+                <select id='role' {...register('role')}>
+                  <option value='author'>Editor</option>
+                  <option value='reader'>Lector</option>
+                  <option value='admin'>Administrador</option>
+                </select>
+                <label htmlFor='name'>Nombre</label>
                 <input
                   type='text'
-                  id='name-user'
-                  name='name'
+                  id='name'
                   placeholder='Nombre'
-                  onChange={(e) => setNameUser(e.target.value)}
+                  {...register('name')}
                 />
-                <label htmlFor='number-id'>Numero de empleado</label>
+                <label htmlFor='lastName'>Apellido</label>
                 <input
-                  type='number'
-                  id='number-id'
-                  name='number-id'
-                  placeholder='Numero de empleado'
-                  onChange={(e) => setNumberId(e.target.value)}
+                  type='text'
+                  id='lastName'
+                  placeholder='Apellido'
+                  {...register('lastName')}
                 />
-                <button onClick={(e) => filterUser(e)}>Filtrar</button>
-              </form>
-            </>
-          )}
+                <label htmlFor='employeeNumber'>Numero de empleado</label>
+                <input
+                  type='text'
+                  id='employeeNumber'
+                  placeholder='123456789'
+                  {...register('employeeNumber')}
+                />
+                <label htmlFor='email'>Correo electrónico</label>
+                <input
+                  style={{ textTransform: 'lowercase' }}
+                  type='email'
+                  id='email'
+                  placeholder='example@example.com'
+                  {...register('email')}
+                />
+                <label htmlFor='password'>Contraseña</label>
+                <input
+                  type='password'
+                  id='password'
+                  placeholder='Contraseña'
+                  {...register('password')}
+                />
+                <label htmlFor='passwordConfirm'>Confirmar contraseña</label>
+                <input
+                  type='password'
+                  id='passwordConfirm'
+                  placeholder='Confirmar contraseña'
+                  {...register('passwordConfirm')}
+                />
+              </>
+            )}
+
+            {modeEdit ? (
+              <>
+                <button type='submit'>Actualizar</button>
+                <button onClick={exitModeEditUser} className='btn-cancel'>
+                  Cancelar
+                </button>
+              </>
+            ) : (
+              <button onClick={handleSubmit(onSubmit)}>Registrar</button>
+            )}
+          </form>
         </div>
         <div className='registered-users'>
           <h2>Usuarios registrados</h2>
@@ -318,7 +213,7 @@ const RegisterUsers = () => {
               <div className='btns-actions'>
                 <i
                   className='fas fa-user-times'
-                  onClick={() => deleteUser(_user.uid)}
+                  onClick={() => deleteUser(_user)}
                 ></i>
                 <i
                   className='fas fa-user-edit'

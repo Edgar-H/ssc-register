@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import '../styles/_modal-upload-files.scss';
 import { useCallback, useState } from 'react';
 import { uploadImgProfile } from '../services/cloudinary/uploadImgProfile';
-import { uploadFile } from '../services/firebase/storage';
+import { uploadFile } from '../services/firebase/profiles/storage';
 
 const Modals = ({ view, closeModal }) => {
   const [prevUpload, setPrevUpload] = useState([]);

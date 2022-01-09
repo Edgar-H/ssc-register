@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { counterProfiles } from '../services/firebase/counterProfiles';
+import { counterProfiles } from '../services/firebase/profiles/counterProfiles';
 
 const Home = () => {
   const [counter, setCounter] = useState(0);

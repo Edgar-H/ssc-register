@@ -10,7 +10,7 @@ import {
   startLoading,
   finishLoading,
 } from '../actions/ui';
-import { getDataUser } from '../../services/firebase/getUser';
+import { getUserAuth } from '../../services/firebase/users/getUserAuth';
 
 export const startLoginEmailPassword =
   (email, password) => async (dispatch) => {
@@ -18,7 +18,7 @@ export const startLoginEmailPassword =
 
     await signInWithEmailAndPassword(auth, email, password)
       .then((userFirebase) => {
-        getDataUser(userFirebase.user.uid).then((userAuth) => {
+        getUserAuth(userFirebase.user.uid).then((userAuth) => {
           if (userAuth) {
             switch (userAuth.status) {
               case 'active':

@@ -1,7 +1,7 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import uniqid from 'uniqid';
-import { dbProfiles } from '../settings';
-import { firestore } from './firebaseConfig';
+import { dbProfiles } from '../../settings';
+import { firestore } from '../firebaseConfig';
 
 const uniqId = uniqid();
 

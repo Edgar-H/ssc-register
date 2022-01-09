@@ -6,11 +6,11 @@ import statesMx from '../assets/statesMx.json';
 import { uploadImgProfile } from '../services/cloudinary/uploadImgProfile';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { getProfile } from '../services/firebase/getProfile';
+import { getProfile } from '../services/firebase/profiles/getProfile';
 import { getCountrys } from '../helpers/getCounrys';
 import { getRfc } from '../helpers/getRFC';
-import { setProfile } from '../services/firebase/setProfile';
-import { updateProfile } from '../services/firebase/updateProfile';
+import { setProfile } from '../services/firebase/profiles/setProfile';
+import { updateProfile } from '../services/firebase/profiles/updateProfile';
 import { finishLoading, startLoading } from '../redux/actions/ui';
 import { SignupSchema, SignupSchemaUpdate } from '../helpers/SignupSchema';
 

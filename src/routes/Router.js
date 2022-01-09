@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { auth } from '../services/firebase/firebaseConfig';
-import { getDataUser } from '../services/firebase/getUser';
 import { useDispatch } from 'react-redux';
 import { signOut } from 'firebase/auth';
 import GlobalNav from '../components/GlobalNav';
@@ -16,29 +15,33 @@ import PrivateRoutes from './PrivateRoutes';
 import RegisterUsers from '../views/RegisterUsers';
 import { login } from '../redux/actions/auth';
 import AdminRoute from './AdminRoute';
+import { getUserAuth } from '../services/firebase/users/getUserAuth';
 
 const Router = () => {
   const dispatch = useDispatch();
-
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user?.uid) {
-        getDataUser(user.uid).then((userAuth) => {
-          if (userAuth.status === 'active') {
-            const loginData = {
-              uid: userAuth.uid,
-              email: userAuth.email,
-              employeeNumber: userAuth.employeeNumber,
-              lastName: userAuth.lastName,
-              name: userAuth.name,
-              role: userAuth.role,
-              status: userAuth.status,
-            };
-            dispatch(login(loginData));
-          } else {
+        getUserAuth(user.uid)
+          .then((userAuth) => {
+            if (userAuth.status === 'active') {
+              const loginData = {
+                uid: userAuth.uid,
+                email: userAuth.email,
+                employeeNumber: userAuth.employeeNumber,
+                lastName: userAuth.lastName,
+                name: userAuth.name,
+                role: userAuth.role,
+                status: userAuth.status,
+              };
+              dispatch(login(loginData));
+            } else {
+              signOut(auth);
+            }
+          })
+          .catch((err) => {
             signOut(auth);
-          }
-        });
+          });
       }
     });
   }, [dispatch]);

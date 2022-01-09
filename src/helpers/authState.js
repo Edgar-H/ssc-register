@@ -1,7 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { login } from '../redux/actions/auth';
 import { auth } from '../services/firebase/firebaseConfig';
-import { getDataUser } from '../services/firebase/getUser';
+import { getDataUser } from '../services/firebase/users/getUser';
 
 export const authState = () => {
   auth.onAuthStateChanged((user) => {

@@ -7,9 +7,9 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { dbProfiles } from '../settings';
+import { dbProfiles } from '../../settings';
 import { addCounterProfiles } from './counterProfiles';
-import { firestore } from './firebaseConfig';
+import { firestore } from '../firebaseConfig';
 
 export const setProfile = async (values, rfc, imgProfile) => {
   const profile = {

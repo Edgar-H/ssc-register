@@ -4,7 +4,7 @@ import {
   uploadBytes,
   getMetadata,
 } from 'firebase/storage';
-import { storage } from './firebaseConfig';
+import { storage } from '../firebaseConfig';
 
 export const uploadFile = (file, path) => {
   const storageRef = ref(storage, `${path}/${file.name}`);
