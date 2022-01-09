@@ -1,6 +1,6 @@
 import { firestore } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
-import { dbUsers } from '../../assets/settings';
+import { dbUsers } from '../settings';
 
 export const getDataUser = async (uid) => {
   const docRef = doc(firestore, `${dbUsers}/${uid}`);

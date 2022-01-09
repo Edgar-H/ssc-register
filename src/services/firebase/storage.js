@@ -14,6 +14,7 @@ export const uploadFile = (file, path) => {
       metadata: await getMetadata(storageRef).then((metadata) => metadata),
     };
   });
+  // dispatch(isLoading(progreso));
   return uploadFile;
 };
 

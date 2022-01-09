@@ -9,7 +9,7 @@ const Modal = ({ children, modalView, closeButton, handleUpload }) => {
         <div className='modal-view'>{children}</div>
         <div className='btn-modal'>
           <button
-            onClick={() => handleUpload()}
+            onClick={(e) => handleUpload(e)}
             className='col-s-100 col-m-35'
             type='button'
           >

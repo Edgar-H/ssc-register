@@ -7,7 +7,8 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { dbProfiles } from '../../assets/settings';
+import { dbProfiles } from '../settings';
+import { addCounterProfiles } from './counterProfiles';
 import { firestore } from './firebaseConfig';
 
 export const setProfile = async (values, rfc, imgProfile) => {
@@ -26,6 +27,7 @@ export const setProfile = async (values, rfc, imgProfile) => {
     country_birth: values.country_birth || null,
     place_birth: values.place_birth || null,
     rfc: rfc,
+    date_arrest: values.date_arrest || null,
     history_arrest: [
       {
         reason_arrest: values.reason_arrest || null,
@@ -46,9 +48,13 @@ export const setProfile = async (values, rfc, imgProfile) => {
     console.log(profileDuplicate);
     console.log('Ya existe un registro con ese rfc');
     // activeModal('duplicate');
+    return 'Ya existe un registro con ese rfc';
   } else {
     console.log('sin coincidencias');
-    await setDoc(doc(firestore, dbProfiles, `${rfc}`), profile);
-    console.log('Perfil guardado');
+    await setDoc(doc(firestore, dbProfiles, `${rfc}`), profile).then(() => {
+      console.log('Profile created');
+      addCounterProfiles();
+      return 'Profile created';
+    });
   }
 };

@@ -1,5 +1,5 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { dbProfiles } from '../../assets/settings';
+import { dbProfiles } from '../settings';
 import { firestore } from './firebaseConfig';
 
 export const getProfile = async (rfc) => {

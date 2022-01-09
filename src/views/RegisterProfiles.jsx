@@ -12,19 +12,18 @@ import { getRfc } from '../helpers/getRFC';
 import { setProfile } from '../services/firebase/setProfile';
 import { updateProfile } from '../services/firebase/updateProfile';
 import { finishLoading, startLoading } from '../redux/actions/ui';
-import { SignupSchema } from '../helpers/SignupSchema';
+import { SignupSchema, SignupSchemaUpdate } from '../helpers/SignupSchema';
 
 const Register = () => {
   // ! cada registro debera tener el numero de empleado que lo creo
   const dispatch = useDispatch();
-  // const { ui } = useSelector((state) => state.auth);
   const { isLoading } = useSelector((state) => state.ui);
   const navigate = useNavigate();
 
   const [mexican, setMexican] = useState(true);
   const [countrys, setCountrys] = useState([]);
   const [imgProfile, setImgProfile] = useState(
-    'https://images.unsplash.com/photo-1639100618065-358723b7961d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80'
+    'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'
   );
   const [modalView, setModalView] = useState(false);
   const [modalViewActive, setModalViewActive] = useState('');
@@ -52,13 +51,22 @@ const Register = () => {
   }, [dispatch, navigate, rfcProfile]);
 
   const handleSaveProfile = (values) => {
-    const rfc = getRfc(values);
     if (profileExists) {
-      updateProfile(values, rfc);
+      updateProfile(values, rfcProfile)
+        .then(() => {
+          // navigate('/profile', { replace: true });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
+      const rfc = getRfc(values);
       setProfile(values, rfc, imgProfile);
     }
   };
+
+  const validationInputs = profileExists ? SignupSchemaUpdate : SignupSchema;
+
   return (
     <div className='form-register'>
       <p className='txt-headers'>Registro {rfcProfile}</p>
@@ -79,7 +87,7 @@ const Register = () => {
           reason_arrest: '',
           description_arrest: '',
         }}
-        validationSchema={SignupSchema}
+        validationSchema={validationInputs}
         validate={(values) => {
           if (values.nationality === 'extranjero') {
             setMexican(false);
@@ -91,7 +99,6 @@ const Register = () => {
           }
         }}
         onSubmit={(values) => {
-          console.log('uwu');
           handleSaveProfile(values);
         }}
       >
@@ -179,7 +186,9 @@ const Register = () => {
                           id='name'
                           placeholder='Nombre(s)'
                           disabled={profileExists ? true : false}
-                          value={profileExists?.name || values.name}
+                          value={
+                            profileExists ? profileExists?.name : values.name
+                          }
                         />
                       </div>
                       <div className='col-s-100 col-m-40'>
@@ -240,13 +249,7 @@ const Register = () => {
                       </div>
                       <div className='height col-s-100 col-m-25'>
                         <label htmlFor='height'>estatura</label>
-                        <Field
-                          type='number'
-                          name='height'
-                          id='height'
-                          disabled={profileExists ? true : false}
-                          value={profileExists?.height || values.height}
-                        />
+                        <Field type='number' name='height' id='height' />
                       </div>
                       <div className='gender col-s-100 col-m-25'>
                         <label htmlFor='gender'>sexo</label>

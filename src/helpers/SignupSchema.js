@@ -39,3 +39,22 @@ export const SignupSchema = Yup.object().shape({
     .trim()
     .required('Descripcion de detencion requerida'),
 });
+
+export const SignupSchemaUpdate = Yup.object().shape({
+  height: Yup.number()
+    .min(50, 'Estatura muy corta')
+    .max(230, 'Estatura muy alta')
+    .required('Campo estatura requerido'),
+  reason_arrest: Yup.string()
+    .min(4, 'Motivvo muy corto')
+    .trim()
+    .required('Motivo de detencion requerido'),
+  date_arrest: Yup.date()
+    .min(new Date(1900, 1, 1), 'Fecha de detencion no valida')
+    .max(new Date(), 'Fecha de detencion no puede ser mayor a la actual')
+    .required('fehca de detencion vacia'),
+  description_arrest: Yup.string()
+    .min(50, 'Descripcion de detencion muy corta')
+    .trim()
+    .required('Descripcion de detencion requerida'),
+});
