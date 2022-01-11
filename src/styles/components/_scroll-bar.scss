@@ -1,0 +1,16 @@
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: rgb(236, 236, 236);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(24, 64, 124, 0.247);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    transition: all 0.5s linear;
+    background: rgba(204, 204, 204, 0.733);
+    border-radius: 4px;
+  }
+}

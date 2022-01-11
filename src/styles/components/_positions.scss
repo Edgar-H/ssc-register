@@ -1,0 +1,28 @@
+@mixin df-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+// container
+.df {
+  display: flex;
+}
+.ib {
+  display: inline-block;
+}
+.di {
+  display: inline;
+}
+
+// position
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}

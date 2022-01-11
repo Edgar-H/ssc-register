@@ -37,7 +37,4 @@ export const types = {
 
   uiStartValidating: '[ui] Start Validating',
   uiFinishValidating: '[ui] Finish Validating',
-
-  // Tasks
-  tasksUpdating: '[ui] Start Updating',
 };

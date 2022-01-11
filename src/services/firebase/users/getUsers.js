@@ -1,10 +1,10 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { dbUsers } from '../../settings';
+import { DB_USERS } from '../../settings';
 import { firestore } from '../firebaseConfig';
 
 export const getUsers = async () => {
   try {
-    const userscollection = collection(firestore, dbUsers);
+    const userscollection = collection(firestore, DB_USERS);
     const userList = await getDocs(userscollection);
     return userList.docs.map((doc) => doc.data());
   } catch (err) {

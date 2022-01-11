@@ -47,7 +47,7 @@ const Login = () => {
             <img src={cdmx} alt='' />
             <img src={police} alt='' />
           </div>
-          <form onSubmit={handleSubmit(handleLogin)}>
+          <form onSubmit={handleSubmit(handleLogin)} className='mt-10'>
             <div className='message'>
               {msgError && <p className='error-message message'>{msgError}</p>}
               {msgSuccess && (

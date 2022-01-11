@@ -1,31 +1,27 @@
 import { Link, Outlet } from 'react-router-dom';
-import { getProfiles } from '../assets/profiles';
 
-const CardProfile = () => {
-  let profiles = getProfiles();
-
+const CardProfile = ({ resultsSearch }) => {
   return (
     <>
-      {profiles.map((u) => (
+      {resultsSearch?.map((profile) => (
         <Link
-          to={`/register/${u.id}`}
+          to={`/register/${profile.key}`}
           style={{ textDecoration: 'none' }}
-          key={u.id}
+          key={profile.key}
           className='col-s-100 col-m-50 col-l-30 card-link'
         >
           <div className='card-profile'>
             <div
               className='img-profile'
               style={{
-                backgroundImage: `url(${u.img_profile})`,
+                backgroundImage: `url(${profile.img})`,
               }}
             ></div>
             <div className='info-profile'>
-              <h4>{u.name}</h4>
-              <p>Alias: {u.alias}</p>
-              <p>Nació: {u.date_birth}</p>
-              <p>Sexo: {u.gender}</p>
-              <p>Detenido: {u.due}</p>
+              <h4>{profile.name}</h4>
+              <p>Alias: {profile.alias}</p>
+              <p>Nació: {profile.birth}</p>
+              <p>Detenido: {profile.arrest}</p>
             </div>
           </div>
         </Link>

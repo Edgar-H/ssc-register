@@ -25,8 +25,8 @@ export const startLoginEmailPassword =
                 const loginData = {
                   uid: userAuth.uid,
                   email: userAuth.email,
-                  employeeNumber: userAuth.employeeNumber,
-                  lastName: userAuth.lastName,
+                  employee_number: userAuth.employee_number,
+                  last_name: userAuth.last_name,
                   name: userAuth.name,
                   role: userAuth.role,
                   status: userAuth.status,

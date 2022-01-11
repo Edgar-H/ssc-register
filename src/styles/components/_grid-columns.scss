@@ -1,0 +1,30 @@
+/* Media queries */
+$bp: (
+  m: 600px,
+  l: 992px,
+);
+
+/* Extra small devices (phones, 600px and down) */
+@for $i from 1 through 20 {
+  .col-s-#{$i * 5} {
+    width: $i * 5%;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: map-get($bp,m)) {
+  @for $i from 1 through 20 {
+    .col-m-#{$i * 5} {
+      width: $i * 5%;
+    }
+  }
+}
+
+/* Medium devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: map-get($bp,l)) {
+  @for $i from 1 through 20 {
+    .col-l-#{$i * 5} {
+      width: $i * 5%;
+    }
+  }
+}

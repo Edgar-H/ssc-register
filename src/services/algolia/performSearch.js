@@ -20,6 +20,5 @@ export const performSearch = async (value) => {
     } = hit;
     return { key, name, alias, birth, arrest, img };
   });
-  console.log('results', results);
   return results;
 };

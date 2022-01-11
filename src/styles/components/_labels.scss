@@ -1,0 +1,7 @@
+@mixin label-filter {
+  width: 100%;
+  font-weight: 500;
+  font-size: 16px;
+  color: $cl-text-label;
+  margin-bottom: 5px;
+}

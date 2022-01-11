@@ -8,7 +8,6 @@ import NotFoundPage from '../views/NotFoundPage';
 import Login from '../views/Login';
 import Home from '../views/Home';
 import Search from '../views/Search';
-import Tasks from '../views/Tasks';
 import Verify from '../views/Verify';
 import RegisterProfiles from '../views/RegisterProfiles';
 import PrivateRoutes from './PrivateRoutes';
@@ -54,7 +53,6 @@ const Router = () => {
           <Route path='/' element={<Layout />}>
             <Route index element={<Home />} />
             <Route path='search' element={<Search />} />
-            <Route path='tasks' element={<Tasks />} />
             <Route element={<AdminRoute />}>
               <Route path='registerusers' element={<RegisterUsers />} />
             </Route>

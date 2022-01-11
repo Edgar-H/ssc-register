@@ -25,11 +25,11 @@ const RegisterUsers = () => {
     const {
       role,
       name,
-      lastName,
-      employeeNumber,
+      last_name,
+      employee_number,
       email,
       password,
-      passwordConfirm,
+      password_confirm,
     } = loginData;
     setError('');
     setSuccess('');
@@ -38,14 +38,14 @@ const RegisterUsers = () => {
       !role ||
       !email ||
       !password ||
-      !passwordConfirm ||
+      !password_confirm ||
       !name ||
-      !lastName ||
-      !employeeNumber
+      !last_name ||
+      !employee_number
     ) {
       return setError('Por favor llena todos los campos');
     }
-    if (password !== passwordConfirm) {
+    if (password !== password_confirm) {
       return setError('Las contraseñas no coinciden');
     }
     createUser(loginData, id)
@@ -144,14 +144,14 @@ const RegisterUsers = () => {
                   type='text'
                   id='lastName'
                   placeholder='Apellido'
-                  {...register('lastName')}
+                  {...register('last_name')}
                 />
                 <label htmlFor='employeeNumber'>Numero de empleado</label>
                 <input
                   type='text'
                   id='employeeNumber'
                   placeholder='123456789'
-                  {...register('employeeNumber')}
+                  {...register('employee_number')}
                 />
                 <label htmlFor='email'>Correo electrónico</label>
                 <input
@@ -173,7 +173,7 @@ const RegisterUsers = () => {
                   type='password'
                   id='passwordConfirm'
                   placeholder='Confirmar contraseña'
-                  {...register('passwordConfirm')}
+                  {...register('password_confirm')}
                 />
               </>
             )}
@@ -193,11 +193,11 @@ const RegisterUsers = () => {
         <div className='registered-users'>
           <h2>Usuarios registrados</h2>
           {userList?.map((_user) => (
-            <div className='user-item' key={_user.employeeNumber}>
+            <div className='user-item' key={_user.employee_number}>
               <span>
-                {_user.name} {_user.lastName}
+                {_user.name} {_user.last_name}
               </span>
-              <span>No: {_user.employeeNumber}</span>
+              <span>No: {_user.employee_number}</span>
               <span className={`status ${_user.status}`}>
                 {_user.status === 'active' && 'Activo'}
                 {_user.status === 'inactive' && 'Suspendido'}
@@ -217,7 +217,7 @@ const RegisterUsers = () => {
                 ></i>
                 <i
                   className='fas fa-user-edit'
-                  onClick={() => modeEditUser(_user.userUid)}
+                  onClick={() => modeEditUser(_user.uid)}
                 ></i>
               </div>
             </div>

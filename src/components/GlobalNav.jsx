@@ -36,9 +36,6 @@ const GlobalNav = () => {
             <NavLink to='/search'>Buscar</NavLink>
           </li>
           <li>
-            <NavLink to='/tasks'>Tareas</NavLink>
-          </li>
-          <li>
             <NavLink to='/verify'>Registrar</NavLink>
           </li>
           {uid.role === 'admin' && (

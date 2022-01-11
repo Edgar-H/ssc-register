@@ -1,10 +1,10 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { dbUsers } from '../../settings';
+import { DB_USERS } from '../../settings';
 import { auth, firestore } from '../firebaseConfig';
 
 export const createUser = async (userData) => {
-  const { role, name, lastName, employeeNumber, email, password } = userData;
+  const { role, name, last_name, employee_number, email, password } = userData;
 
   try {
     const userRegistration = await createUserWithEmailAndPassword(
@@ -14,26 +14,20 @@ export const createUser = async (userData) => {
     ).then((userFirebase) => userFirebase);
     const docRef = await doc(
       firestore,
-      `${dbUsers}/${userRegistration.user.uid}`
+      `${DB_USERS}/${userRegistration.user.uid}`
     );
     if (userRegistration.operationType === 'signIn') {
       console.log(userRegistration);
       setDoc(docRef, {
         name,
-        lastName,
-        employeeNumber,
+        last_name,
+        employee_number,
         email,
         role,
         uid: `${userRegistration.user.uid}`,
         status: 'active',
       });
       return 'User created';
-      /* await sendEmailVerification(
-          auth,
-          userRegistration.user.auth.currentUser
-        )
-          .then(() => console.log('Email enviado'))
-          .catch((err) => console.log('Error al enviar el email', err)); */
     }
   } catch (err) {
     switch (err.code) {

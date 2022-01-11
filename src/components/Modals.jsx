@@ -1,6 +1,5 @@
 import Modal from './Modal';
 import { useDropzone } from 'react-dropzone';
-import '../styles/_modal-upload-files.scss';
 import { useCallback, useState } from 'react';
 import { uploadImgProfile } from '../services/cloudinary/uploadImgProfile';
 import { uploadFile } from '../services/firebase/profiles/storage';

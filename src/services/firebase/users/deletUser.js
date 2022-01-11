@@ -1,6 +1,6 @@
 import { deleteDoc, doc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
-import { dbUsers } from '../../settings';
+import { DB_USERS } from '../../settings';
 import { firestore } from '../firebaseConfig';
 
 export const deleteUser = async (user) => {
@@ -24,7 +24,7 @@ export const deleteUser = async (user) => {
     })
     .then(async (result) => {
       if (result.isConfirmed) {
-        await doc(firestore, `${dbUsers}/${user.uid}`)
+        await doc(firestore, `${DB_USERS}/${user.uid}`)
           .then((ref) => deleteDoc(ref))
           .then(() => {
             swalWithBootstrapButtons.fire(

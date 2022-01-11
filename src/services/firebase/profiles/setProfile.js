@@ -7,7 +7,7 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { dbProfiles } from '../../settings';
+import { DB_PROFILES } from '../../settings';
 import { addCounterProfiles } from './counterProfiles';
 import { firestore } from '../firebaseConfig';
 
@@ -39,7 +39,7 @@ export const setProfile = async (values, rfc, imgProfile) => {
   };
 
   const profilesRef = query(
-    collection(firestore, dbProfiles),
+    collection(firestore, DB_PROFILES),
     where('rfc', '==', rfc)
   );
   const querySnapshots = await getDocs(profilesRef);
@@ -51,7 +51,7 @@ export const setProfile = async (values, rfc, imgProfile) => {
     return 'Ya existe un registro con ese rfc';
   } else {
     console.log('sin coincidencias');
-    await setDoc(doc(firestore, dbProfiles, `${rfc}`), profile).then(() => {
+    await setDoc(doc(firestore, DB_PROFILES, `${rfc}`), profile).then(() => {
       console.log('Profile created');
       addCounterProfiles();
       return 'Profile created';

@@ -1,6 +1,6 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import uniqid from 'uniqid';
-import { dbProfiles } from '../../settings';
+import { DB_PROFILES } from '../../settings';
 import { firestore } from '../firebaseConfig';
 
 const uniqId = uniqid();
@@ -17,7 +17,7 @@ export const updateProfile = async (values, rfcProfile) => {
   const date_arrest = values.date_arrest || null;
   const height = values.height;
 
-  const docRef = doc(firestore, `${dbProfiles}/${rfcProfile}`);
+  const docRef = doc(firestore, `${DB_PROFILES}/${rfcProfile}`);
   const docSnapshot = await getDoc(docRef);
   await updateDoc(docRef, {
     history_arrest: [...docSnapshot.data().history_arrest, ...history_arrest],
@@ -25,4 +25,5 @@ export const updateProfile = async (values, rfcProfile) => {
     height: height,
   });
   console.log('Profile updated');
+  return 'Profile updated';
 };

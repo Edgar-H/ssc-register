@@ -1,0 +1,26 @@
+@mixin message {
+  display: inline-block;
+  font-style: italic;
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 300;
+  border-radius: $br-content;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  margin: 8px auto 12px;
+  p {
+    @include message;
+    text-align: center;
+  }
+  .error-message {
+    background-color: rgb(255, 0, 0, 0.2);
+    color: #5f0404;
+  }
+  .success-message {
+    background-color: rgba(16, 174, 74, 0.2);
+    color: #045f25;
+  }
+}
